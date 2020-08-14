@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="00. MFC">
+      <UniqueIdentifier>{62c12922-8b46-4eec-a7ff-4e6db2bedcdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. MFC\00. MainApp">
+      <UniqueIdentifier>{c736293b-0507-4ea7-a5a5-2570f7389e47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. MFC\01. Frame">
+      <UniqueIdentifier>{0cfcd810-8e84-4cc8-a3d0-eaa88389e51d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. MFC\02. View">
+      <UniqueIdentifier>{9b0b53c7-b7e3-49f4-8867-7ef98950ac46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. MFC\03. Doc">
+      <UniqueIdentifier>{c052bb05-34b2-41ef-8749-f37b8e0ca71e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Defualt">
+      <UniqueIdentifier>{96667d84-144e-44aa-8cf2-d72a1e03c028}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Header">
+      <UniqueIdentifier>{41b4c889-24f7-48e8-afed-49b0983f6b3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. MyForm">
+      <UniqueIdentifier>{978d3a84-02f7-4f76-b6c9-5fd546f7aead}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Tools">
+      <UniqueIdentifier>{aa070fc3-0991-4dad-ae37-53e9146da55b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Tools\00. AnimationTool">
+      <UniqueIdentifier>{4331afd0-ba1c-41c7-943e-02bb69ae4b92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Scene">
+      <UniqueIdentifier>{b2720c27-cb23-41a6-92fa-a5bd368b27be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. GameObject">
+      <UniqueIdentifier>{f4713719-dc42-4d10-8226-d7dc04fee7ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. GameObject\00. Camera">
+      <UniqueIdentifier>{3791921b-795b-484a-aca3-d22e099be01b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. GameObject\01. SampleObj">
+      <UniqueIdentifier>{e9c32c60-fb58-4469-9da9-092ecf0e0fdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. GameObject\00. Camera\00. OrbitalCam">
+      <UniqueIdentifier>{483b8f4c-f545-463c-ad9a-d26f4c186404}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. GameObject\02. MoveSample">
+      <UniqueIdentifier>{5cc3139f-0b78-4080-8801-841402b628a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Tools\01. ActionTool">
+      <UniqueIdentifier>{514f5f24-b438-47b5-852d-2e42fe167cf1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Codes\AniTool.h">
+      <Filter>00. MFC\00. MainApp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\AniToolDoc.h">
+      <Filter>00. MFC\03. Doc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\MainFrm.h">
+      <Filter>00. MFC\01. Frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\AniToolView.h">
+      <Filter>00. MFC\02. View</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>99.Defualt</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>99.Defualt</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>99.Defualt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\MyForm.h">
+      <Filter>01. MyForm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Define.h">
+      <Filter>98. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Enum.h">
+      <Filter>98. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Macro.h">
+      <Filter>98. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Struct.h">
+      <Filter>98. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Typedef.h">
+      <Filter>98. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\MainScene.h">
+      <Filter>03. Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\AniSync.h">
+      <Filter>02. Tools\00. AnimationTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\SmapleObject.h">
+      <Filter>04. GameObject\01. SampleObj</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\OrbitalCamera.h">
+      <Filter>04. GameObject\00. Camera\00. OrbitalCam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\MoveSample.h">
+      <Filter>04. GameObject\02. MoveSample</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\ActionTool.h">
+      <Filter>02. Tools\01. ActionTool</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Codes\AniTool.cpp">
+      <Filter>00. MFC\00. MainApp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\AniToolDoc.cpp">
+      <Filter>00. MFC\03. Doc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MainFrm.cpp">
+      <Filter>00. MFC\01. Frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\AniToolView.cpp">
+      <Filter>00. MFC\02. View</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>99.Defualt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MyForm.cpp">
+      <Filter>01. MyForm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MainScene.cpp">
+      <Filter>03. Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\AniSync.cpp">
+      <Filter>02. Tools\00. AnimationTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\SmapleObject.cpp">
+      <Filter>04. GameObject\01. SampleObj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\OrbitalCamera.cpp">
+      <Filter>04. GameObject\00. Camera\00. OrbitalCam</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MoveSample.cpp">
+      <Filter>04. GameObject\02. MoveSample</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\ActionTool.cpp">
+      <Filter>02. Tools\01. ActionTool</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="AniTool.rc">
+      <Filter>99.Defualt</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt">
+      <Filter>99.Defualt</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\AniTool.ico">
+      <Filter>99.Defualt</Filter>
+    </Image>
+    <Image Include="res\AniToolDoc.ico">
+      <Filter>99.Defualt</Filter>
+    </Image>
+    <Image Include="res\Toolbar.bmp">
+      <Filter>99.Defualt</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\AniTool.rc2">
+      <Filter>99.Defualt</Filter>
+    </None>
+  </ItemGroup>
+</Project>

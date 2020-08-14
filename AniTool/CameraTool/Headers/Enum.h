@@ -1,0 +1,3 @@
+#pragma once
+
+enum CAMERATYPE {CAM_FREE, CAM_EVENT, CAM_END};
