@@ -65,7 +65,7 @@ void CCameraPath::Render(const _float & fTimeDelta)
 	{
 		D3DXMatrixIdentity(&matWorld);
 		//matWorld *= 0.5f;
-		memcpy(matWorld.m[3], (*m_pvecAction)[i].vMoveTo, sizeof(_vec3));
+		memcpy(&matWorld._41, &(*m_pvecAction)[i].vMoveTo, sizeof(_vec3));
 
 		m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
@@ -124,6 +124,7 @@ CCameraPath* CCameraPath::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CCameraPath::Free(void)
 {
+	ENGINE::Safe_Release(m_pMesh);
 	ENGINE::Safe_Release(m_pTexture);
 	ENGINE::Safe_Release(m_pTexture2);
 	ENGINE::CGameObject::Free();

@@ -233,6 +233,7 @@ CEventCamera* CEventCamera::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 void CEventCamera::Free(void)
 {
 	m_listActionQueue.clear();
+	ENGINE::Safe_Release(m_pMesh);
 	ENGINE::Safe_Release(m_pTexture);
 	ENGINE::Safe_Release(m_pTexture2);
 	ENGINE::CCamera::Free();

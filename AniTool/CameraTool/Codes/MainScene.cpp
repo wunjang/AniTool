@@ -175,7 +175,7 @@ HRESULT CMainScene::Ready_Environment_Layer(const ENGINE::LAYER_TYPE eLayerType)
 
 	pGameObject = CFreeCamera::Create(m_pGraphicDev);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(ENGINE::CAMERA, pGameObject), E_FAIL);
-
+	
 	pGameObject = CEventCamera::Create(m_pGraphicDev);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(ENGINE::CAMERA, pGameObject), E_FAIL);
 
@@ -195,13 +195,13 @@ HRESULT CMainScene::Ready_GameLogic_Layer(const ENGINE::LAYER_TYPE eLayerType)
 
 	pGameObject = CSampleObject::Create(m_pGraphicDev);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(ENGINE::OBJ_ID::PLAYER, pGameObject), E_FAIL);
-
+	
 	pGameObject = CHeightField::Create(m_pGraphicDev);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(ENGINE::OBJ_ID::TERRAIN, pGameObject), E_FAIL);
-
+	
 	pGameObject = CCameraPath::Create(m_pGraphicDev);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(ENGINE::OBJ_ID::UI, pGameObject), E_FAIL);
-
+	
 	FAILED_CHECK_RETURN(Load_MapData(eLayerType, L"../Data/Map/WaterfallWorld/MapObject/New_Test6.dat"), E_FAIL);
 
 
