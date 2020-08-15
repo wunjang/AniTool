@@ -76,4 +76,10 @@ public:
 	CStatic m_textFreeCamAngle;
 	afx_msg void OnBnClickedFreecamCopy();
 	CStatic m_textFreeCamViewAngle;
+	afx_msg void OnBnClickedTargetmove();
+	afx_msg void OnBnClickedTargetCopycam();
+	float m_fTargetPos[3];
+	float m_fTargetAngle[3];
+	afx_msg void OnBnClickedStop();
+	afx_msg void OnBnClickedFreecamMove();
 };

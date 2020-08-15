@@ -16,7 +16,7 @@ HRESULT CCameraPath::Initialize()
 {
 	FAILED_CHECK(CGameObject::Add_Component(0, L"Renderer", ENGINE::COMPONENT::TAG_RENDERER, (ENGINE::CComponent**)&m_pRendererCom));
 
-	D3DXCreateSphere(m_pGraphicDev, 2, 16, 16, &m_pMesh, nullptr);
+	D3DXCreateSphere(m_pGraphicDev, 0.1f, 16, 16, &m_pMesh, nullptr);
 
 	m_pvecLine = GET_INSTANCE(CCameraMgr)->Get_Line();
 
@@ -44,7 +44,8 @@ _int CCameraPath::Update(const _float& fTimeDelta)
 		m_pvecAction = CEventCamTool::Get_Dialog()->Get_Actions();
 	}
 
-	m_pRendererCom->Add_RenderGroup(ENGINE::RENDER_NONALPHA, this);
+	if (GET_INSTANCE(CCameraMgr)->Get_EventCameraActionLeft() == 0)
+		m_pRendererCom->Add_RenderGroup(ENGINE::RENDER_NONALPHA, this);
 
 
 

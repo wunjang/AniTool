@@ -32,7 +32,7 @@ _int CHeightField::Update(const _float& fTimeDelta)
 	_long lMouseMove = ENGINE::Get_DIMouseMove(ENGINE::MOUSEMOVESTATE::DIMS_Z);
 	_float fMoveY = 1.f;
 	if (ENGINE::KeyPressing(DIK_LCONTROL))
-		fMoveY = 10.f;
+		fMoveY = 0.1f;
 
 
 	if (lMouseMove > 0)
@@ -57,7 +57,9 @@ _int CHeightField::Update(const _float& fTimeDelta)
 
 _int CHeightField::LateUpdate(const _float& fTimeDelta)
 {
-	m_pRendererCom->Add_RenderGroup(ENGINE::RENDER_NONALPHA, this);
+	if (GET_INSTANCE(CCameraMgr)->Get_CurCameraType() == CAM_FREE)
+		m_pRendererCom->Add_RenderGroup(ENGINE::RENDER_NONALPHA, this);
+
 	return ENGINE::NO_EVENT;
 }
 

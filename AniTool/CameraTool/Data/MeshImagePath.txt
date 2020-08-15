@@ -4,6 +4,12 @@ Mario2D.X|StaticMesh|..\Resource\Mesh\StaticMesh\2D\Mario2D/
 Nokonoko2D.X|StaticMesh|..\Resource\Mesh\StaticMesh\2D\Nokonoko2D/
 Nokonoko2D_ZRotation90.X|StaticMesh|..\Resource\Mesh\StaticMesh\2D\Nokonoko2D/
 Coin.X|StaticMesh|..\Resource\Mesh\StaticMesh\Item\Coin/
+Mario_Body.X|DynamicMesh|..\Resource\Mesh\DynamicMesh\Mario\Mario_Body/
+Mario_Eye.X|DynamicMesh|..\Resource\Mesh\DynamicMesh\Mario\Mario_Eye/
+Mario_Face.X|DynamicMesh|..\Resource\Mesh\DynamicMesh\Mario\Mario_Face/
+Mario_HandL.X|DynamicMesh|..\Resource\Mesh\DynamicMesh\Mario\Mario_HandL/
+Mario_HandR.X|DynamicMesh|..\Resource\Mesh\DynamicMesh\Mario\Mario_HandR/
+Mario_Head.X|DynamicMesh|..\Resource\Mesh\DynamicMesh\Mario\Mario_Head/
 BreakParts000.X|StaticMesh|..\Resource\Mesh\StaticMesh\Map\WaterfallWorld\BreakParts000/
 BreakParts001.X|StaticMesh|..\Resource\Mesh\StaticMesh\Map\WaterfallWorld\BreakParts001/
 BreakParts002.X|StaticMesh|..\Resource\Mesh\StaticMesh\Map\WaterfallWorld\BreakParts002/

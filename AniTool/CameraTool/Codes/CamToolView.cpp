@@ -31,6 +31,7 @@ BEGIN_MESSAGE_MAP(CCamToolView, CView)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CView::OnFilePrintPreview)
 	ON_WM_LBUTTONDOWN()
+	ON_WM_RBUTTONDOWN()
 END_MESSAGE_MAP()
 
 // CCamToolView 생성/소멸
@@ -97,8 +98,6 @@ void CCamToolView::OnDraw(CDC* /*pDC*/)
 	ENGINE::Render_End();
 
 	// KeyInput
-	if (ENGINE::KeyDown(DIK_Q))
-		::SetFocus(g_FormHWND);
 	if (ENGINE::KeyDown(DIK_F3))
 		GET_INSTANCE(CCameraMgr)->Set_CurCamera(CAM_FREE);
 	if (ENGINE::KeyDown(DIK_F4))
@@ -301,4 +300,20 @@ void CCamToolView::OnLButtonDown(UINT nFlags, CPoint point)
 	}
 
 	CView::OnLButtonDown(nFlags, point);
+}
+
+
+void CCamToolView::OnRButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+
+	_vec3 vPick;
+	if (GET_INSTANCE(CCameraMgr)->Picking(m_pGraphicDev, &vPick))
+	{
+		ENGINE::CTransform*	pTransform = dynamic_cast<ENGINE::CTransform*>(ENGINE::Get_Component(ENGINE::LAYER_GAMEOBJECT, ENGINE::PLAYER, ENGINE::COMPONENT::TAG_TRANSFORM, ENGINE::COMPONENT::ID_DYNAMIC));
+		NULL_CHECK(pTransform);
+		pTransform->Set_Pos(&vPick);
+	}
+
+	CView::OnRButtonDown(nFlags, point);
 }

@@ -34,11 +34,17 @@
 #define IDC_RENDER_PATH                 1056
 #define IDC_BUTTON_SAVEACTIONEDIT       1057
 #define IDC_BUTTON_PLAYEVENT            1058
+#define IDC_TARGET_X                    1059
+#define IDC_TARGET_Y                    1060
+#define IDC_TARGET_Z                    1061
+#define IDC_TARGETROT_X                 1062
 #define IDC_CAMERAACTION_BEGINPOS       1063
 #define IDC_CAMERAACTION_BEGINROT       1064
 #define IDC_CAMERAACTION_FOLLOW         1065
 #define IDC_CAMERAACTION_LENGTH         1066
 #define IDC_CAMERAACTION_ACCTIME        1067
+#define IDC_TARGETROT_Y                 1068
+#define IDC_TARGETROT_Z                 1069
 #define IDC_VIEWANGLE                   1070
 #define IDC_LIST1                       1071
 #define IDC_FILELIST                    1071
@@ -50,6 +56,10 @@
 #define IDC_FREECAM_ANGLE               1077
 #define IDC_FREECAME_VIEWANGLE          1078
 #define IDC_FREECAM_VIEWANGLE           1078
+#define IDC_TARGETMOVE                  1079
+#define IDC_TARGET_COPYCAM              1080
+#define IDC_FREECAM_MOVE                1081
+#define IDC_STOP                        1082
 
 // Next default values for new objects
 // 
@@ -57,7 +67,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        314
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1079
+#define _APS_NEXT_CONTROL_VALUE         1083
 #define _APS_NEXT_SYMED_VALUE           314
 #endif
 #endif

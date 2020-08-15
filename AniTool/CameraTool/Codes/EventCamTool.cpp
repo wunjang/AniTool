@@ -8,6 +8,7 @@
 
 #include "EventCamera.h"
 #include "FreeCamera.h"
+#include "SmapleObject.h"
 
 
 // CEventCamTool 대화 상자입니다.
@@ -23,6 +24,8 @@ CEventCamTool::CEventCamTool(CWnd* pParent /*=NULL*/)
 {
 	ZeroMemory(m_vMoveTo, sizeof(float) * 3);
 	ZeroMemory(m_vRotateTo, sizeof(float) * 3);
+	ZeroMemory(m_fTargetPos, sizeof(float) * 3);
+	ZeroMemory(m_fTargetAngle, sizeof(float) * 3);
 }
 
 CEventCamTool::~CEventCamTool()
@@ -64,6 +67,12 @@ void CEventCamTool::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_FREECAM_POS, m_textFreeCamPos);
 	DDX_Control(pDX, IDC_FREECAM_ANGLE, m_textFreeCamAngle);
 	DDX_Control(pDX, IDC_FREECAM_VIEWANGLE, m_textFreeCamViewAngle);
+	DDX_Text(pDX, IDC_TARGET_X, m_fTargetPos[ENGINE::ROT_X]);
+	DDX_Text(pDX, IDC_TARGET_Y, m_fTargetPos[ENGINE::ROT_Y]);
+	DDX_Text(pDX, IDC_TARGET_Z, m_fTargetPos[ENGINE::ROT_Z]);
+	DDX_Text(pDX, IDC_TARGETROT_X, m_fTargetAngle[ENGINE::ROT_X]);
+	DDX_Text(pDX, IDC_TARGETROT_Y, m_fTargetAngle[ENGINE::ROT_Y]);
+	DDX_Text(pDX, IDC_TARGETROT_Z, m_fTargetAngle[ENGINE::ROT_Z]);
 }
 
 
@@ -79,6 +88,10 @@ BEGIN_MESSAGE_MAP(CEventCamTool, CDialogEx)
 	ON_LBN_SELCHANGE(IDC_FILELIST, &CEventCamTool::OnLbnSelchangeFilelist)
 	ON_BN_CLICKED(IDC_BUTTON_PLAYEVENT, &CEventCamTool::OnBnClickedButtonPlayevent)
 	ON_BN_CLICKED(IDC_FREECAM_COPY, &CEventCamTool::OnBnClickedFreecamCopy)
+	ON_BN_CLICKED(IDC_TARGETMOVE, &CEventCamTool::OnBnClickedTargetmove)
+	ON_BN_CLICKED(IDC_TARGET_COPYCAM, &CEventCamTool::OnBnClickedTargetCopycam)
+	ON_BN_CLICKED(IDC_STOP, &CEventCamTool::OnBnClickedStop)
+	ON_BN_CLICKED(IDC_FREECAM_MOVE, &CEventCamTool::OnBnClickedFreecamMove)
 END_MESSAGE_MAP()
 
 
@@ -403,4 +416,53 @@ void CEventCamTool::OnBnClickedFreecamCopy()
 	memcpy(m_vMoveTo, pFreeCam->Get_Pos(), sizeof(_vec3));
 	memcpy(m_vRotateTo, pFreeCam->Get_Angle(), sizeof(_vec3));
 	UpdateData(FALSE);
+}
+
+
+void CEventCamTool::OnBnClickedTargetmove()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	_vec3 vPos, vAngle;
+	memcpy(&vPos, m_fTargetPos, sizeof(_vec3));
+	memcpy(&vAngle, m_fTargetAngle, sizeof(_vec3));
+
+	ENGINE::CTransform*	pTransform = dynamic_cast<ENGINE::CTransform*>(ENGINE::Get_Component(ENGINE::LAYER_GAMEOBJECT, ENGINE::PLAYER, ENGINE::COMPONENT::TAG_TRANSFORM, ENGINE::COMPONENT::ID_DYNAMIC));
+	NULL_CHECK(pTransform);
+	pTransform->Set_Pos(&vPos);
+	pTransform->Set_Angle(vAngle);
+}
+
+
+void CEventCamTool::OnBnClickedTargetCopycam()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	const _vec3& vPos = dynamic_cast<CFreeCamera*>(GET_INSTANCE(CCameraMgr)->Get_Camera(CAM_FREE))->Get_Pos();
+	const _vec3& vAngle = dynamic_cast<CFreeCamera*>(GET_INSTANCE(CCameraMgr)->Get_Camera(CAM_FREE))->Get_Angle();
+
+	memcpy(m_fTargetPos, &vPos, sizeof(float) * 3);
+	memcpy(m_fTargetAngle, &vAngle, sizeof(float) * 3);
+
+	UpdateData(FALSE);
+}
+
+
+void CEventCamTool::OnBnClickedStop()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+
+void CEventCamTool::OnBnClickedFreecamMove()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+
+	// 현재 액션 위치로 이동합니다
+	if (m_lboxCameraAction.GetCount() < m_lboxCameraAction.GetCurSel() || m_lboxCameraAction.GetCurSel() < 0)
+		return;
+
+	const CAMERAACTION& rCamAction = m_vecCameraAction[m_lboxCameraAction.GetCurSel()];
+
+	dynamic_cast<CFreeCamera*>(GET_INSTANCE(CCameraMgr)->Get_Camera(CAM_FREE))->Set_Pos(rCamAction.vMoveTo);
+	dynamic_cast<CFreeCamera*>(GET_INSTANCE(CCameraMgr)->Get_Camera(CAM_FREE))->Set_Pos(rCamAction.vRotateTo);
+
 }

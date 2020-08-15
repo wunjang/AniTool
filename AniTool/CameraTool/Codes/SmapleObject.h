@@ -10,7 +10,7 @@ END
 class CSampleObject : public ENGINE::CGameObject
 {
 public:
-	enum {BODY, EYE, FACE, HANDL, HANDR, HEAD, PARTS_END};
+	enum PARTS { PARTS_BODY, PARTS_EYE, PARTS_FACE, PARTS_HANDL, PARTS_HANDR, PARTS_HEAD, PARTS_END };
 private:
 	explicit CSampleObject(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual ~CSampleObject();
@@ -19,7 +19,9 @@ public:
 	// Getter
 	ENGINE::CDynamicMesh* Get_Mesh(_uint iParts) { return m_pMeshCom[iParts]; }
 	// Setter
+	void				Set_Animation(ANITAG::PLAYER_BODY eAni);
 	// General
+	HRESULT				Load_AnimationComboData(const wstring& wstrFileName);
 
 public:
 	virtual HRESULT		Initialize(void);
@@ -35,6 +37,9 @@ private:
 	_matrix					m_matTransform[PARTS_END];
 	ENGINE::CTransform*		m_pTransformCom = nullptr;
 	ENGINE::CRenderer*		m_pRendererCom = nullptr;
+
+	map<_uint, vector<_uint>>	m_mapAniSet;
+
 
 public:
 	static CSampleObject* Create(LPDIRECT3DDEVICE9 pGraphicDev);

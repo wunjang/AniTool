@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "CameraMgr.h"
 
+#include "EventCamera.h"
+
 IMPLEMENT_SINGLETON(CCameraMgr)
 CCameraMgr::CCameraMgr()
 {
@@ -12,6 +14,11 @@ CCameraMgr::~CCameraMgr()
 	//for (auto rCam : m_mapCamera)
 	//	ENGINE::Safe_Release(rCam);
 	m_mapCamera.clear();
+}
+
+size_t CCameraMgr::Get_EventCameraActionLeft(void)
+{
+	return dynamic_cast<CEventCamera*>(m_mapCamera[CAMERATYPE::CAM_EVENT])->Get_ActionLeft();
 }
 
 _bool CCameraMgr::Picking(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 * pOut)

@@ -21,12 +21,12 @@ HRESULT CFreeCamera::Initialize()
 	m_vAt = { 0.f, 0.f, 1.f };
 	m_vUp = { 0.f, 1.f, 0.f };
 
-	m_fFovY = 60.f;
+	m_fFovY = 45.f;
 	m_fAspect = (_float)VIEWCX / VIEWCY;
-	m_fNear = 1.f;
+	m_fNear = 0.1f;
 	m_fFar = 1000.f;
 
-	m_fSpeed = 1.f;
+	m_fSpeed = 0.1f;
 
 	FAILED_CHECK_RETURN(ENGINE::CCamera::Initialize(), E_FAIL);
 
@@ -92,12 +92,18 @@ void CFreeCamera::Key_Input(const _float& fTimeDelta)
 	{
 		ZeroMemory(m_vEye, sizeof(_vec3));
 		ZeroMemory(m_vAngle, sizeof(_vec3));
-		m_fFovY = 60.f;
+		m_fFovY = 45.f;
+		m_fSpeed = 1.f;
 	}
-	if (ENGINE::KeyDown(DIK_UP))
+	if (ENGINE::KeyDown(DIK_RIGHT))
 		m_fFovY += 5.f;
-	if (ENGINE::KeyDown(DIK_DOWN))
+	if (ENGINE::KeyDown(DIK_LEFT))
 		m_fFovY -= 5.f;
+
+	if (ENGINE::KeyDown(DIK_UP))
+		m_fSpeed *= 1.25f;
+	if (ENGINE::KeyDown(DIK_DOWN))
+		m_fSpeed *= 0.8f;
 
 
 	// input dir
@@ -112,9 +118,9 @@ void CFreeCamera::Key_Input(const _float& fTimeDelta)
 		vInputDir.z -= 1.f;
 	if (ENGINE::KeyPressing(DIK_D))
 		vInputDir.x += 1.f;
-	if (ENGINE::KeyPressing(DIK_SPACE))
+	if (ENGINE::KeyPressing(DIK_SPACE) || ENGINE::KeyPressing(DIK_Q))
 		vInputDir.y += 1.f;
-	if (ENGINE::KeyPressing(DIK_LSHIFT))
+	if (ENGINE::KeyPressing(DIK_LSHIFT) || ENGINE::KeyPressing(DIK_E))
 		vInputDir.y -= 1.f;
 	
 

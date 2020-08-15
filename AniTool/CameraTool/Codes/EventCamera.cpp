@@ -25,15 +25,21 @@ void CEventCamera::Set_Action(vector<CAMERAACTION>& vecAction)
 	m_pvecLine->clear();
 }
 
+void CEventCamera::Stop(void)
+{
+	m_listActionQueue.clear();
+	m_LastLastAction = m_LastAction = CAMERAACTION();
+}
+
 HRESULT CEventCamera::Initialize()
 {
 	m_vEye = { 0.f, 0.f, -1.f };
 	m_vAt = { 0.f, 0.f, 0.f };
 	m_vUp = { 0.f, 1.f, 0.f };
 
-	m_fFovY = D3DXToRadian(60.f);
+	m_fFovY = 45.f;
 	m_fAspect = (_float)VIEWCX / VIEWCY;
-	m_fNear = 1.f;
+	m_fNear = 0.1f;
 	m_fFar = 1000.f;
 
 	FAILED_CHECK_RETURN(ENGINE::CCamera::Initialize(), E_FAIL);
@@ -43,7 +49,7 @@ HRESULT CEventCamera::Initialize()
 	GET_INSTANCE(CCameraMgr)->AddCamera(CAM_EVENT, this);
 	m_pvecLine = GET_INSTANCE(CCameraMgr)->Get_Line();
 
-	D3DXCreateSphere(m_pGraphicDev, 2, 16, 16, &m_pMesh, nullptr);
+	D3DXCreateSphere(m_pGraphicDev, 0.1f, 16, 16, &m_pMesh, nullptr);
 
 	m_pGraphicDev->CreateTexture(1, 1, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &m_pTexture, NULL);
 	D3DLOCKED_RECT			LockRect;
@@ -80,7 +86,8 @@ _int CEventCamera::Update(const _float& fTimeDelta)
 		}
 	}
 
-	m_pRendererCom->Add_RenderGroup(ENGINE::RENDER_NONALPHA, this);
+	if (GET_INSTANCE(CCameraMgr)->Get_CurCameraType() == CAM_FREE)
+		m_pRendererCom->Add_RenderGroup(ENGINE::RENDER_NONALPHA, this);
 
 	if (!ReadActionData(fTimeDelta))
 	{
@@ -168,7 +175,7 @@ void CEventCamera::ActionTarget(const _float & fTimeDelta)
 	const CAMERAACTION& CurAction = m_listActionQueue.front();
 	_float fTimeRate = m_fActionCounter / CurAction.fLength;
 
-	m_pTargetPos = dynamic_cast<ENGINE::CTransform*>(ENGINE::Get_Component(ENGINE::LAYER_GAMEOBJECT, ENGINE::OBJ_ID(CurAction.eOBJ_ID), ENGINE::COMPONENT::TAG_TRANSFORM, ENGINE::COMPONENT::ID_DYNAMIC))->Get_Info(ENGINE::INFO_POS);
+	m_pTargetPos = dynamic_cast<ENGINE::CTransform*>(ENGINE::Get_Component(ENGINE::LAYER_GAMEOBJECT, ENGINE::PLAYER, ENGINE::COMPONENT::TAG_TRANSFORM, ENGINE::COMPONENT::ID_DYNAMIC))->Get_Info(ENGINE::INFO_POS);
 	m_vAngle = m_LastAction.vRotateTo + (CurAction.vRotateTo - m_LastAction.vRotateTo) * fTimeRate;
 
 	m_vAt = *m_pTargetPos + m_LastAction.vMoveTo * (1.f - fTimeRate) + CurAction.vMoveTo * fTimeRate;

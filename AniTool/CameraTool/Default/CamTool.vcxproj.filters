@@ -102,9 +102,6 @@
     <ClInclude Include="..\Codes\MainScene.h">
       <Filter>03. Scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\SmapleObject.h">
-      <Filter>04. GameObject\01. SampleObj</Filter>
-    </ClInclude>
     <ClInclude Include="..\Codes\MoveSample.h">
       <Filter>04. GameObject\02. MoveSample</Filter>
     </ClInclude>
@@ -156,6 +153,9 @@
     <ClInclude Include="..\Codes\CameraPath.h">
       <Filter>04. GameObject\05. CameraPath</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\SmapleObject.h">
+      <Filter>04. GameObject\01. SampleObj</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Codes\MainFrm.cpp">
@@ -169,9 +169,6 @@
     </ClCompile>
     <ClCompile Include="..\Codes\MainScene.cpp">
       <Filter>03. Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\SmapleObject.cpp">
-      <Filter>04. GameObject\01. SampleObj</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\MoveSample.cpp">
       <Filter>04. GameObject\02. MoveSample</Filter>
@@ -223,6 +220,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\CameraPath.cpp">
       <Filter>04. GameObject\05. CameraPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\SmapleObject.cpp">
+      <Filter>04. GameObject\01. SampleObj</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

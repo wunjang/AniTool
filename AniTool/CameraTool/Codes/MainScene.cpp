@@ -122,9 +122,9 @@ HRESULT CMainScene::Load_MapData(const ENGINE::LAYER_TYPE eLayerType, wstring ws
 			break;
 		case ENGINE::OBJ_ID::MAP_WFW_TRAMPOLINE:
 
-			pGameObject = CTrempoline::Create(m_pGraphicDev, tInfo, wstrResourceName);
-			NULL_CHECK_RETURN_MSG(pGameObject, E_FAIL, L"MapData Load Fail");
-			m_Layers[eLayerType]->Add_GameObject(ENGINE::OBJ_ID::MAP_WFW_GROUND, pGameObject);
+			//pGameObject = CTrempoline::Create(m_pGraphicDev, tInfo, wstrResourceName);
+			//NULL_CHECK_RETURN_MSG(pGameObject, E_FAIL, L"MapData Load Fail");
+			//m_Layers[eLayerType]->Add_GameObject(ENGINE::OBJ_ID::MAP_WFW_GROUND, pGameObject);
 
 			break;
 		case ENGINE::OBJ_ID::MAP_WFW_STONEBRIGE:

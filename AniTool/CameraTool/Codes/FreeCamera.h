@@ -14,6 +14,10 @@ public:
 	const _vec3& Get_Pos(void) { return m_vEye; }
 	const _vec3& Get_Angle(void) { return m_vAngle; }
 
+	// Setter
+	void		Set_Pos(const _vec3& vPos) { m_vEye = vPos; }
+	void		Set_Angle(const _vec3& vAngle) { m_vAngle = vAngle; }
+
 public:
 	HRESULT Initialize();
 

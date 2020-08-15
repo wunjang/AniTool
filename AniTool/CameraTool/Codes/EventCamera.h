@@ -11,8 +11,12 @@ private:
 
 public:
 	// Getter
+	size_t		Get_ActionLeft(void) { return m_listActionQueue.size(); }
 	// Setter
-	void Set_Action(vector<CAMERAACTION>& vecAction);
+	void		Set_Action(vector<CAMERAACTION>& vecAction);
+
+	// General
+	void		Stop(void);
 
 public:
 	HRESULT Initialize();
