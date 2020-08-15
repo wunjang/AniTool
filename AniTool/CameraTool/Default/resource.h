@@ -27,6 +27,7 @@
 #define IDC_MOVE_CURVE                  1049
 #define IDC_ACTIONNAME                  1050
 #define IDC_SLIDER1                     1051
+#define IDC_CAMERACATION_COPY           1051
 #define IDC_LOOP                        1052
 #define IDC_CHECK_ISFOLLOW              1053
 #define IDC_FOLLOWOBJ_ID                1054

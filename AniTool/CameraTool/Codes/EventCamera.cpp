@@ -29,6 +29,8 @@ void CEventCamera::Stop(void)
 {
 	m_listActionQueue.clear();
 	m_LastLastAction = m_LastAction = CAMERAACTION();
+
+	GET_INSTANCE(CCameraMgr)->Set_CurCamera(CAM_FREE);
 }
 
 HRESULT CEventCamera::Initialize()
@@ -185,7 +187,7 @@ void CEventCamera::ActionTarget(const _float & fTimeDelta)
 	D3DXMatrixRotationYawPitchRoll(&matRot, D3DXToRadian(m_vAngle.y), D3DXToRadian(m_vAngle.x), D3DXToRadian(m_vAngle.z));
 	D3DXVec3TransformCoord(&vLook, &vLook, &matRot);
 
-	m_vEye = m_vAt - vLook * CurAction.fDistance;
+	m_vEye = m_vAt - vLook * (m_LastAction.fDistance * (1.f - fTimeRate) + CurAction.fDistance * fTimeRate);
 
 
 	m_fFovY = m_LastAction.fViewAngleTo + (CurAction.fViewAngleTo - m_LastAction.fViewAngleTo) * fTimeRate;

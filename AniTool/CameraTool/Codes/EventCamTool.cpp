@@ -92,6 +92,7 @@ BEGIN_MESSAGE_MAP(CEventCamTool, CDialogEx)
 	ON_BN_CLICKED(IDC_TARGET_COPYCAM, &CEventCamTool::OnBnClickedTargetCopycam)
 	ON_BN_CLICKED(IDC_STOP, &CEventCamTool::OnBnClickedStop)
 	ON_BN_CLICKED(IDC_FREECAM_MOVE, &CEventCamTool::OnBnClickedFreecamMove)
+	ON_BN_CLICKED(IDC_CAMERACATION_COPY, &CEventCamTool::OnBnClickedCameracationCopy)
 END_MESSAGE_MAP()
 
 
@@ -196,6 +197,9 @@ void CEventCamTool::OnBnClickedCameraactionAdd()
 void CEventCamTool::OnBnClickedCameracationRemove()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (m_lboxCameraAction.GetCount() < m_lboxCameraAction.GetCurSel() || m_lboxCameraAction.GetCurSel() < 0)
+		return;
+
 	auto iter = m_vecCameraAction.begin();
 	m_vecCameraAction.erase(iter + m_lboxCameraAction.GetCurSel());
 	m_lboxCameraAction.DeleteString(m_lboxCameraAction.GetCurSel());
@@ -294,6 +298,9 @@ void CEventCamTool::OnBnClickedCheckIsFollowTarget()
 void CEventCamTool::OnBnClickedButtonPlay()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (m_lboxCameraAction.GetCount() < 1)
+		return;
+
 	GET_INSTANCE(CCameraMgr)->Set_CurCamera(CAM_FREE);
 	dynamic_cast<CEventCamera*>(GET_INSTANCE(CCameraMgr)->Get_Camera(CAM_EVENT))->Set_Action(m_vecCameraAction);
 }
@@ -403,6 +410,8 @@ void CEventCamTool::OnLbnSelchangeFilelist()
 void CEventCamTool::OnBnClickedButtonPlayevent()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (m_lboxCameraAction.GetCount() < 1)
+		return;
 	GET_INSTANCE(CCameraMgr)->Set_CurCamera(CAM_EVENT);
 	dynamic_cast<CEventCamera*>(GET_INSTANCE(CCameraMgr)->Get_Camera(CAM_EVENT))->Set_Action(m_vecCameraAction);
 }
@@ -449,6 +458,7 @@ void CEventCamTool::OnBnClickedTargetCopycam()
 void CEventCamTool::OnBnClickedStop()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	dynamic_cast<CEventCamera*>(GET_INSTANCE(CCameraMgr)->Get_Camera(CAM_EVENT))->Stop();
 }
 
 
@@ -463,6 +473,21 @@ void CEventCamTool::OnBnClickedFreecamMove()
 	const CAMERAACTION& rCamAction = m_vecCameraAction[m_lboxCameraAction.GetCurSel()];
 
 	dynamic_cast<CFreeCamera*>(GET_INSTANCE(CCameraMgr)->Get_Camera(CAM_FREE))->Set_Pos(rCamAction.vMoveTo);
-	dynamic_cast<CFreeCamera*>(GET_INSTANCE(CCameraMgr)->Get_Camera(CAM_FREE))->Set_Pos(rCamAction.vRotateTo);
+	dynamic_cast<CFreeCamera*>(GET_INSTANCE(CCameraMgr)->Get_Camera(CAM_FREE))->Set_Angle(rCamAction.vRotateTo);
 
+}
+
+
+void CEventCamTool::OnBnClickedCameracationCopy()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (m_lboxCameraAction.GetCount() < m_lboxCameraAction.GetCurSel() || m_lboxCameraAction.GetCurSel() < 0)
+		return;
+
+	CAMERAACTION CopyAction = m_vecCameraAction[m_lboxCameraAction.GetCurSel()];
+	CopyAction.strName += L" - Copy";
+	m_vecCameraAction.push_back(CopyAction);
+	m_lboxCameraAction.AddString(CopyAction.strName);
+
+	UpdateData(TRUE);
 }

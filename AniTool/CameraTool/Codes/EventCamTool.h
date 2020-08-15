@@ -82,4 +82,5 @@ public:
 	float m_fTargetAngle[3];
 	afx_msg void OnBnClickedStop();
 	afx_msg void OnBnClickedFreecamMove();
+	afx_msg void OnBnClickedCameracationCopy();
 };

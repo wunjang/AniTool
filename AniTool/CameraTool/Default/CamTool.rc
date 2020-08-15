@@ -270,13 +270,14 @@ BEGIN
     PUSHBUTTON      "CopyCamera",IDC_TARGET_COPYCAM,234,165,50,14
     PUSHBUTTON      "Move",IDC_FREECAM_MOVE,137,276,46,14
     PUSHBUTTON      "STOP",IDC_STOP,320,312,50,35
-    LTEXT           "F1: 설정 리셋",IDC_STATIC,18,318,38,8
-    LTEXT           "좌,우: 자유 카메라 시야각 조절",IDC_STATIC,18,327,83,8
-    LTEXT           "상,하: 자유 카메라 이동속도 조절",IDC_STATIC,18,336,89,8
-    LTEXT           "좌클릭: 선택된 액션 이동 좌표 변경",IDC_STATIC,18,345,95,8
-    LTEXT           "우클릭: 테스트 오브젝트 이동",IDC_STATIC,18,354,79,8
-    GROUPBOX        "조작",IDC_STATIC,11,306,161,75
-    LTEXT           "마우스 휠: 피킹 평면 높이 조절, Ctrl 눌러서 느리게",IDC_STATIC,18,363,137,8
+    LTEXT           "F1: 설정 리셋",IDC_STATIC,26,310,38,8
+    LTEXT           "좌,우: 자유 카메라 시야각 조절",IDC_STATIC,26,319,83,8
+    LTEXT           "상,하: 자유 카메라 이동속도 조절",IDC_STATIC,26,328,89,8
+    LTEXT           "좌클릭: 선택된 액션 이동 좌표 변경",IDC_STATIC,26,337,95,8
+    LTEXT           "우클릭: 테스트 오브젝트 이동",IDC_STATIC,26,346,79,8
+    GROUPBOX        "조작",IDC_STATIC,7,304,161,63
+    LTEXT           "마우스 휠: 피킹 평면 높이 조절, Ctrl 눌러서 느리게",IDC_STATIC,26,355,137,8
+    PUSHBUTTON      "Copy",IDC_CAMERACATION_COPY,120,169,50,14
 END
 
 
