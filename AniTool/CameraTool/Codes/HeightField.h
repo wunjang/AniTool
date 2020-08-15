@@ -16,6 +16,9 @@ public:////기본함수
 	virtual HRESULT		SetUp_ConstantTable(LPD3DXEFFECT & pEffect);
 
 private:
+	void				Key_Input(void);
+
+private:
 	ENGINE::CVIBuffer_Terrain*		m_pBuffer;
 	ENGINE::CRenderer*				m_pRendererCom;
 

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "EventCamera.h"
+#include "FreeCamera.h"
 
 CEventCamera::CEventCamera(LPDIRECT3DDEVICE9 pGraphicDev)
 	: ENGINE::CCamera(pGraphicDev)
@@ -13,13 +14,46 @@ CEventCamera::~CEventCamera(void)
 }
 
 
-void CEventCamera::Set_Action(vector<CAMERAACTION>& vecAction)
+void CEventCamera::Set_Action(vector<CAMERAACTION_ADVANCED>& vecAction, pair<_float, _float> fSmoothInOut)
 {
+	m_fActionCounter = 0.f;
+
 	m_listActionQueue.clear();
 	for (size_t i = 0; i < vecAction.size(); ++i)
 	{
 		m_listActionQueue.push_back(vecAction[i]);
 	}
+
+	if (fSmoothInOut != pair<_float, _float>(0.f, 0.f))
+	{
+		CAMERAACTION_ADVANCED CurCamera;
+		CFreeCamera* pFreeCam = dynamic_cast<CFreeCamera*>(GET_INSTANCE(CCameraMgr)->Get_Camera(CAM_FREE));
+		CurCamera.vMoveTo = pFreeCam->Get_Pos();
+		CurCamera.vRotateTo = pFreeCam->Get_Angle();
+
+		CurCamera.fViewAngleTo = 45.f;
+		_vec3 vTargetPos = *dynamic_cast<ENGINE::CTransform*>(ENGINE::Get_Component(ENGINE::LAYER_GAMEOBJECT, ENGINE::PLAYER, ENGINE::COMPONENT::TAG_TRANSFORM, ENGINE::COMPONENT::ID_DYNAMIC))->Get_Info(ENGINE::INFO_POS);
+		CurCamera.fDistance = D3DXVec3Length(&(vTargetPos - pFreeCam->Get_Pos()));
+
+		if(fSmoothInOut.first > 0.f)
+		{
+			m_listActionQueue.front().fLength = fSmoothInOut.first;
+
+			CurCamera.fLength = 0.01f;
+			m_listActionQueue.push_front(CurCamera);
+		}
+
+		if (fSmoothInOut.second > 0.f)
+		{
+			CurCamera.fLength = fSmoothInOut.second;
+			m_listActionQueue.push_back(CurCamera);
+		}
+	}
+	else
+	{
+		m_listActionQueue.front().fLength = 0.01f;
+	}
+
 	m_LastLastAction = m_LastAction = m_listActionQueue.front();
 
 	m_pvecLine->clear();
@@ -28,7 +62,7 @@ void CEventCamera::Set_Action(vector<CAMERAACTION>& vecAction)
 void CEventCamera::Stop(void)
 {
 	m_listActionQueue.clear();
-	m_LastLastAction = m_LastAction = CAMERAACTION();
+	m_LastLastAction = m_LastAction = CAMERAACTION_ADVANCED();
 
 	GET_INSTANCE(CCameraMgr)->Set_CurCamera(CAM_FREE);
 }
@@ -74,7 +108,7 @@ _int CEventCamera::Update(const _float& fTimeDelta)
 
 	if (m_listActionQueue.empty())
 	{
-		m_LastLastAction = m_LastAction = CAMERAACTION();
+		m_LastLastAction = m_LastAction = CAMERAACTION_ADVANCED();
 
 		return 0;
 	}
@@ -160,21 +194,25 @@ _bool CEventCamera::ReadActionData(const _float & fTimeDelta)
 			return false;
 	}
 
-	if (m_listActionQueue.front().bIsFollow)
+	CAMERAACTION_ADVANCED CurAction = m_listActionQueue.front();
+	// 여기서부터 복사본을 사용
+
+
+	if (CurAction.bIsFollow)
 	{
-		ActionTarget(fTimeDelta);
+		ActionTarget(fTimeDelta, CurAction);
 	}
 	else
 	{
-		ActionFree(fTimeDelta);
+		ActionFree(fTimeDelta, CurAction);
 	}
+	Shake(fTimeDelta, CurAction);
 
 	return true;
 }
 
-void CEventCamera::ActionTarget(const _float & fTimeDelta)
+void CEventCamera::ActionTarget(const _float & fTimeDelta, const CAMERAACTION_ADVANCED& CurAction)
 {
-	const CAMERAACTION& CurAction = m_listActionQueue.front();
 	_float fTimeRate = m_fActionCounter / CurAction.fLength;
 
 	m_pTargetPos = dynamic_cast<ENGINE::CTransform*>(ENGINE::Get_Component(ENGINE::LAYER_GAMEOBJECT, ENGINE::PLAYER, ENGINE::COMPONENT::TAG_TRANSFORM, ENGINE::COMPONENT::ID_DYNAMIC))->Get_Info(ENGINE::INFO_POS);
@@ -193,13 +231,12 @@ void CEventCamera::ActionTarget(const _float & fTimeDelta)
 	m_fFovY = m_LastAction.fViewAngleTo + (CurAction.fViewAngleTo - m_LastAction.fViewAngleTo) * fTimeRate;
 }
 
-void CEventCamera::ActionFree(const _float & fTimeDelta)
+void CEventCamera::ActionFree(const _float & fTimeDelta, const CAMERAACTION_ADVANCED& CurAction)
 {
-	const CAMERAACTION& CurAction = m_listActionQueue.front();
 	_float fTimeRate = m_fActionCounter / CurAction.fLength;
 
 
-	CAMERAACTION NextAction;
+	CAMERAACTION_ADVANCED NextAction;
 	auto iter_next = m_listActionQueue.begin();
 	iter_next++;
 
@@ -226,6 +263,54 @@ void CEventCamera::ActionFree(const _float & fTimeDelta)
 	D3DXVec3TransformCoord(&vLook, &vLook, &matRot);
 
 	m_vAt = m_vEye + vLook;
+}
+
+void CEventCamera::Shake(const _float & fTimeDelta, CAMERAACTION_ADVANCED & CurAction)
+{
+	const _int& EffectOption = CurAction.EffectOption;
+
+	function<_vec3(SHAKESTAT&)> fnShake = [&](SHAKESTAT& stat)->_vec3 {
+		if (D3DXVec3Length(&(stat.vDest - stat.vPos)) < fTimeDelta * stat.fSpeed)
+		{
+			stat.vPos = stat.vDest;
+
+			_float fShakeAngle = D3DXToRadian(ENGINE::CFunc::GetRandomFloat(0.f, 360.f));
+			stat.vDest = _vec3(cos(fShakeAngle), sin(fShakeAngle), 0.f) * ENGINE::CFunc::GetRandomFloat(0.f, 0.1f);
+		}
+		else
+		{
+			_vec3 vShakeDir = *D3DXVec3Normalize(&vShakeDir, &(stat.vDest - stat.vPos));
+			stat.vPos += vShakeDir * fTimeDelta * stat.fSpeed;
+		}
+
+		_vec3 vShake;
+		_matrix matCamWorld;
+		Get_matCameraWorld(&matCamWorld);
+		D3DXVec3TransformNormal(&vShake, &stat.vPos, &matCamWorld);
+
+		return vShake;
+	};
+
+	switch (CurAction.EffectOption)
+	{
+	case CAMERAEFFECT::EFFECT_SHAKEEYE:
+		m_vEye += fnShake(m_Shake_Eye);
+		break;
+	case CAMERAEFFECT::EFFECT_SHAKEAT:
+		m_vAt += fnShake(m_Shake_At);
+		break;
+	case CAMERAEFFECT::EFFECT_SHAKEEYEANDATDFFRENT:
+		m_vEye += fnShake(m_Shake_Eye);
+		m_vAt += fnShake(m_Shake_At);
+		break;
+	case CAMERAEFFECT::EFFECT_SHAKEEYEANDATSAME: {
+		_vec3 vMove = fnShake(m_Shake_Eye);
+		m_vEye += vMove;
+		m_vAt += vMove;
+	}	break;
+	default:
+		return;
+	}
 }
 
 

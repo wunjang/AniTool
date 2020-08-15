@@ -61,6 +61,9 @@
 #define IDC_TARGET_COPYCAM              1080
 #define IDC_FREECAM_MOVE                1081
 #define IDC_STOP                        1082
+#define IDC_SMOOTHIN                    1083
+#define IDC_SMOOTHOUT                   1084
+#define IDC_CLEARSMOOTH                 1085
 
 // Next default values for new objects
 // 
@@ -68,7 +71,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        314
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1083
+#define _APS_NEXT_CONTROL_VALUE         1086
 #define _APS_NEXT_SYMED_VALUE           314
 #endif
 #endif

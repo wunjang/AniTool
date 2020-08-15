@@ -29,27 +29,11 @@ HRESULT CHeightField::Initialize()
 
 _int CHeightField::Update(const _float& fTimeDelta)
 {
-	_long lMouseMove = ENGINE::Get_DIMouseMove(ENGINE::MOUSEMOVESTATE::DIMS_Z);
-	_float fMoveY = 1.f;
-	if (ENGINE::KeyPressing(DIK_LCONTROL))
-		fMoveY = 0.1f;
-
-
-	if (lMouseMove > 0)
+	if (g_MFChWnd == ::GetFocus())
 	{
-		m_fHeight += fMoveY;
+		Key_Input();
 	}
-	else if (lMouseMove < 0)
-	{
-		m_fHeight -= fMoveY;
-	}
-
-	if (ENGINE::KeyDown(DIK_F1))
-	{
-		m_fHeight = 0.f;
-	}
-
-	GET_INSTANCE(CCameraMgr)->Set_FieldHeight(m_fHeight);
+	
 
 
 	return ENGINE::NO_EVENT;
@@ -120,6 +104,31 @@ HRESULT CHeightField::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	pEffect->SetMatrix("g_matProj", &matProj);
 	
 	return S_OK;
+}
+
+void CHeightField::Key_Input(void)
+{
+	_long lMouseMove = ENGINE::Get_DIMouseMove(ENGINE::MOUSEMOVESTATE::DIMS_Z);
+	_float fMoveY = 1.f;
+	if (ENGINE::KeyPressing(DIK_LCONTROL))
+		fMoveY = 0.1f;
+
+
+	if (lMouseMove > 0)
+	{
+		m_fHeight += fMoveY;
+	}
+	else if (lMouseMove < 0)
+	{
+		m_fHeight -= fMoveY;
+	}
+
+	if (ENGINE::KeyDown(DIK_F1))
+	{
+		m_fHeight = 0.f;
+	}
+
+	GET_INSTANCE(CCameraMgr)->Set_FieldHeight(m_fHeight);
 }
 
 CHeightField * CHeightField::Create(LPDIRECT3DDEVICE9 pGraphicDev)

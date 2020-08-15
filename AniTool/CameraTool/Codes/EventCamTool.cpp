@@ -26,6 +26,7 @@ CEventCamTool::CEventCamTool(CWnd* pParent /*=NULL*/)
 	ZeroMemory(m_vRotateTo, sizeof(float) * 3);
 	ZeroMemory(m_fTargetPos, sizeof(float) * 3);
 	ZeroMemory(m_fTargetAngle, sizeof(float) * 3);
+	ZeroMemory(m_fSmoothLength, sizeof(float) * 2);
 }
 
 CEventCamTool::~CEventCamTool()
@@ -73,6 +74,8 @@ void CEventCamTool::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_TARGETROT_X, m_fTargetAngle[ENGINE::ROT_X]);
 	DDX_Text(pDX, IDC_TARGETROT_Y, m_fTargetAngle[ENGINE::ROT_Y]);
 	DDX_Text(pDX, IDC_TARGETROT_Z, m_fTargetAngle[ENGINE::ROT_Z]);
+	DDX_Text(pDX, IDC_SMOOTHIN, m_fSmoothLength[SMOOTH_IN]);
+	DDX_Text(pDX, IDC_SMOOTHOUT, m_fSmoothLength[SMOOTH_OUT]);
 }
 
 
@@ -93,6 +96,7 @@ BEGIN_MESSAGE_MAP(CEventCamTool, CDialogEx)
 	ON_BN_CLICKED(IDC_STOP, &CEventCamTool::OnBnClickedStop)
 	ON_BN_CLICKED(IDC_FREECAM_MOVE, &CEventCamTool::OnBnClickedFreecamMove)
 	ON_BN_CLICKED(IDC_CAMERACATION_COPY, &CEventCamTool::OnBnClickedCameracationCopy)
+	ON_BN_CLICKED(IDC_CLEARSMOOTH, &CEventCamTool::OnBnClickedClearsmooth)
 END_MESSAGE_MAP()
 
 
@@ -110,7 +114,7 @@ void CEventCamTool::Set_FreeCamData(const _vec3& vPos, const _vec3& vAngle, cons
 	m_textFreeCamViewAngle.SetWindowTextW(strViewAngle);
 }
 
-const CAMERAACTION * CEventCamTool::Get_CurAction(void)
+const CAMERAACTION_ADVANCED * CEventCamTool::Get_CurAction(void)
 {
 	if (m_lboxCameraAction.GetCount() < m_lboxCameraAction.GetCurSel() || m_lboxCameraAction.GetCurSel() < 0)
 		return nullptr;
@@ -141,7 +145,7 @@ void CEventCamTool::SerchFile(void)
 	CFileFind find;
 	BOOL bContinue = FALSE;
 
-	bContinue = find.FindFile(L"..\\Data\\EventCamera\\*.dat");
+	bContinue = find.FindFile(L"..\\Data\\EventCamera\\*.eventcam");
 	while (bContinue)
 	{
 		bContinue = find.FindNextFile();
@@ -163,7 +167,7 @@ void CEventCamTool::OnLbnSelchangeCameraactionList()
 		return;
 	UpdateData(TRUE);
 
-	const CAMERAACTION& CurAction = m_vecCameraAction[m_lboxCameraAction.GetCurSel()];
+	const CAMERAACTION_ADVANCED& CurAction = m_vecCameraAction[m_lboxCameraAction.GetCurSel()];
 
 	m_editActionName.SetWindowTextW(CurAction.strName);
 
@@ -172,8 +176,8 @@ void CEventCamTool::OnLbnSelchangeCameraactionList()
 	
 	memcpy(m_vMoveTo, CurAction.vMoveTo, sizeof(float) * 3);
 	memcpy(m_vRotateTo, CurAction.vRotateTo, sizeof(float) * 3);
-	//m_vMoveTo = CurAction.vMoveTo;
-	//m_vRotateTo = CurAction.vRotateTo;
+
+	m_cboxEffect.SetCurSel(CurAction.EffectOption);
 
 	m_fViewAngleTo = CurAction.fViewAngleTo;
 
@@ -187,7 +191,7 @@ void CEventCamTool::OnBnClickedCameraactionAdd()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	m_lboxCameraAction.AddString(L"NewAction");
-	m_vecCameraAction.push_back(CAMERAACTION());
+	m_vecCameraAction.push_back(CAMERAACTION_ADVANCED());
 
 	UpdateData(TRUE);
 
@@ -215,7 +219,7 @@ void CEventCamTool::OnBnClickedButtonSaveactionedit()
 		return;
 
 	int iListCurSel = m_lboxCameraAction.GetCurSel();
-	CAMERAACTION& CurAction = m_vecCameraAction[iListCurSel];
+	CAMERAACTION_ADVANCED& CurAction = m_vecCameraAction[iListCurSel];
 
 	m_editActionName.GetWindowTextW(CurAction.strName);
 	m_lboxCameraAction.DeleteString(iListCurSel);
@@ -237,6 +241,7 @@ void CEventCamTool::OnBnClickedButtonSaveactionedit()
 	CurAction.fViewAngleTo = m_fViewAngleTo;
 	CurAction.fLength = m_fActionLength;
 	CurAction.fDistance = m_fDistance;
+	CurAction.EffectOption = m_cboxEffect.GetCurSel();
 
 	UpdateData(FALSE);
 }
@@ -248,8 +253,12 @@ BOOL CEventCamTool::OnInitDialog()
 
 	// TODO:  여기에 추가 초기화 작업을 추가합니다.
 
-	// cboxOBJ_ID
-	// 일단 보류
+	m_cboxEffect.AddString(L"None");
+	m_cboxEffect.AddString(L"Shake_Eye");
+	m_cboxEffect.AddString(L"Shake_At");
+	m_cboxEffect.AddString(L"Shake_EyeAndAtDeffrent");
+	m_cboxEffect.AddString(L"Shake_EyeAndAtSame");
+	m_cboxEffect.SetCurSel(0);
 
 	SerchFile();
 
@@ -267,7 +276,7 @@ void CEventCamTool::OnBnClickedCheckIsFollowTarget()
 	if (m_lboxCameraAction.GetCount() < m_lboxCameraAction.GetCurSel() || m_lboxCameraAction.GetCurSel() < 0)
 		return;
 
-	const CAMERAACTION& CurAction = m_vecCameraAction[m_lboxCameraAction.GetCurSel()];
+	const CAMERAACTION_ADVANCED& CurAction = m_vecCameraAction[m_lboxCameraAction.GetCurSel()];
 
 	if (m_cbIsFollowTarget.GetCheck())
 	{
@@ -298,11 +307,13 @@ void CEventCamTool::OnBnClickedCheckIsFollowTarget()
 void CEventCamTool::OnBnClickedButtonPlay()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
 	if (m_lboxCameraAction.GetCount() < 1)
 		return;
 
 	GET_INSTANCE(CCameraMgr)->Set_CurCamera(CAM_FREE);
-	dynamic_cast<CEventCamera*>(GET_INSTANCE(CCameraMgr)->Get_Camera(CAM_EVENT))->Set_Action(m_vecCameraAction);
+	dynamic_cast<CEventCamera*>(GET_INSTANCE(CCameraMgr)->Get_Camera(CAM_EVENT))->Set_Action(m_vecCameraAction, { m_fSmoothLength[SMOOTH_IN], m_fSmoothLength[SMOOTH_OUT] });
 }
 
 
@@ -323,11 +334,11 @@ void CEventCamTool::OnBnClickedFilesave()
 		return;
 	}
 
-	strFullPath = L"../Data/EventCamera/" + strFullPath + L".dat";
+	strFullPath = L"../Data/EventCamera/" + strFullPath + L".eventcam";
 	HANDLE hFile = CreateFile(strFullPath, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
 	if (INVALID_HANDLE_VALUE == hFile)
 	{
-		MSG_BOX(L"Failed to Create Save File .dat !!!");
+		MSG_BOX(L"Failed to Create Save File .eventcam !!!");
 		return;
 	}
 
@@ -339,7 +350,7 @@ void CEventCamTool::OnBnClickedFilesave()
 	{
 		StrCpyW(szActionName, rAction.strName);
 		WriteFile(hFile, &szActionName, sizeof(szActionName), &dwByte, nullptr);
-		WriteFile(hFile, &rAction.bIsFollow, sizeof(CAMERAACTION) - sizeof(CString), &dwByte, nullptr);
+		WriteFile(hFile, &rAction.bIsFollow, sizeof(CAMERAACTION_ADVANCED) - sizeof(CString), &dwByte, nullptr);
 	}
 	CloseHandle(hFile);
 
@@ -357,12 +368,12 @@ void CEventCamTool::OnBnClickedFileload()
 	UpdateData(TRUE);
 	CString strFullPath;
 	m_editFileName.GetWindowTextW(strFullPath);
-	strFullPath = L"../Data/EventCamera/" + strFullPath + L".dat";
+	strFullPath = L"../Data/EventCamera/" + strFullPath + L".eventcam";
 
 	HANDLE hFile = CreateFile(strFullPath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 	if (INVALID_HANDLE_VALUE == hFile)
 	{
-		MSG_BOX(L"Failed to Create Load File .dat !!!");
+		MSG_BOX(L"Failed to Create Load File .eventcam !!!");
 		return;
 	}
 
@@ -373,13 +384,13 @@ void CEventCamTool::OnBnClickedFileload()
 
 	// Buffer
 	TCHAR szActionName[64] = L"";
-	CAMERAACTION Action;
+	CAMERAACTION_ADVANCED Action;
 
 	DWORD dwByte = 0;
 	while (true)
 	{
 		ReadFile(hFile, &szActionName, sizeof(szActionName), &dwByte, nullptr);
-		ReadFile(hFile, &Action.bIsFollow, sizeof(CAMERAACTION) - sizeof(CString), &dwByte, nullptr);
+		ReadFile(hFile, &Action.bIsFollow, sizeof(CAMERAACTION_ADVANCED) - sizeof(CString), &dwByte, nullptr);
 
 		if (dwByte == 0)
 			break;
@@ -410,10 +421,15 @@ void CEventCamTool::OnLbnSelchangeFilelist()
 void CEventCamTool::OnBnClickedButtonPlayevent()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
 	if (m_lboxCameraAction.GetCount() < 1)
 		return;
+
 	GET_INSTANCE(CCameraMgr)->Set_CurCamera(CAM_EVENT);
-	dynamic_cast<CEventCamera*>(GET_INSTANCE(CCameraMgr)->Get_Camera(CAM_EVENT))->Set_Action(m_vecCameraAction);
+
+	dynamic_cast<CEventCamera*>(GET_INSTANCE(CCameraMgr)->Get_Camera(CAM_EVENT))->Set_Action(m_vecCameraAction, { m_fSmoothLength[SMOOTH_IN], m_fSmoothLength[SMOOTH_OUT] });
+	//dynamic_cast<CEventCamera*>(GET_INSTANCE(CCameraMgr)->Get_Camera(CAM_EVENT))->Set_Action(m_vecCameraAction, {1.f, 1.f});
 }
 
 
@@ -470,7 +486,7 @@ void CEventCamTool::OnBnClickedFreecamMove()
 	if (m_lboxCameraAction.GetCount() < m_lboxCameraAction.GetCurSel() || m_lboxCameraAction.GetCurSel() < 0)
 		return;
 
-	const CAMERAACTION& rCamAction = m_vecCameraAction[m_lboxCameraAction.GetCurSel()];
+	const CAMERAACTION_ADVANCED& rCamAction = m_vecCameraAction[m_lboxCameraAction.GetCurSel()];
 
 	dynamic_cast<CFreeCamera*>(GET_INSTANCE(CCameraMgr)->Get_Camera(CAM_FREE))->Set_Pos(rCamAction.vMoveTo);
 	dynamic_cast<CFreeCamera*>(GET_INSTANCE(CCameraMgr)->Get_Camera(CAM_FREE))->Set_Angle(rCamAction.vRotateTo);
@@ -484,10 +500,20 @@ void CEventCamTool::OnBnClickedCameracationCopy()
 	if (m_lboxCameraAction.GetCount() < m_lboxCameraAction.GetCurSel() || m_lboxCameraAction.GetCurSel() < 0)
 		return;
 
-	CAMERAACTION CopyAction = m_vecCameraAction[m_lboxCameraAction.GetCurSel()];
+	CAMERAACTION_ADVANCED CopyAction = m_vecCameraAction[m_lboxCameraAction.GetCurSel()];
 	CopyAction.strName += L" - Copy";
 	m_vecCameraAction.push_back(CopyAction);
 	m_lboxCameraAction.AddString(CopyAction.strName);
 
 	UpdateData(TRUE);
+}
+
+
+void CEventCamTool::OnBnClickedClearsmooth()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	m_fSmoothLength[SMOOTH_IN] = 0.f;
+	m_fSmoothLength[SMOOTH_OUT] = 0.f;
+
+	UpdateData(FALSE);
 }

@@ -9,6 +9,7 @@
 class CEventCamTool : public CDialogEx
 {
 	enum StaticText {TEXT_BEGINPOS, TEXT_BEGINROT, TEXT_FOLLOW, TEXT_ACTIONLENGTH, TEXT_ACCTIME, TEXT_END};
+	enum Smooth { SMOOTH_IN, SMOOTH_OUT, SMOOTH_END };
 	DECLARE_DYNAMIC(CEventCamTool)
 
 public:
@@ -34,12 +35,12 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	// data
-	vector<CAMERAACTION> m_vecCameraAction;
+	vector<CAMERAACTION_ADVANCED> m_vecCameraAction;
 
 	void Set_FreeCamData(const _vec3& vPos, const _vec3& vAngle, const _float& fViewAngle);
 
-	const vector<CAMERAACTION>* Get_Actions(void) { return &m_vecCameraAction; }
-	const CAMERAACTION*	Get_CurAction(void);
+	const vector<CAMERAACTION_ADVANCED>* Get_Actions(void) { return &m_vecCameraAction; }
+	const CAMERAACTION_ADVANCED*	Get_CurAction(void);
 	int					Get_CurActionIdx(void);
 	void				Set_CurAction(_vec3 vPick);
 
@@ -83,4 +84,8 @@ public:
 	afx_msg void OnBnClickedStop();
 	afx_msg void OnBnClickedFreecamMove();
 	afx_msg void OnBnClickedCameracationCopy();
+	CEdit m_editSmoothOut;
+	CEdit m_editSmoothIn;
+	afx_msg void OnBnClickedClearsmooth();
+	float m_fSmoothLength[SMOOTH_END];
 };
