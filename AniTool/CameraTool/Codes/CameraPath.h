@@ -12,7 +12,7 @@ private:
 public:
 	// Getter
 	// Setter
-	void Set_Action(vector<CAMERAACTION_ADVANCED>* pvecAction) { m_pvecAction = pvecAction; }
+	void Set_Action(vector<CAMERAACTION>* pvecAction) { m_pvecAction = pvecAction; }
 
 public:
 	HRESULT Initialize();
@@ -21,7 +21,7 @@ public:
 	virtual void		Render(const _float& fTimeDelta) override;
 
 private:
-	const vector<CAMERAACTION_ADVANCED>*	m_pvecAction = nullptr;
+	const vector<CAMERAACTION>*	m_pvecAction = nullptr;
 	vector<_vec3>*		m_pvecLine = nullptr;
 	ENGINE::CRenderer*	m_pRendererCom = nullptr;
 	LPDIRECT3DTEXTURE9	m_pTexture = nullptr;

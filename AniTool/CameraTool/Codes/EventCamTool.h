@@ -35,12 +35,12 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	// data
-	vector<CAMERAACTION_ADVANCED> m_vecCameraAction;
+	vector<CAMERAACTION> m_vecCameraAction;
 
 	void Set_FreeCamData(const _vec3& vPos, const _vec3& vAngle, const _float& fViewAngle);
 
-	const vector<CAMERAACTION_ADVANCED>* Get_Actions(void) { return &m_vecCameraAction; }
-	const CAMERAACTION_ADVANCED*	Get_CurAction(void);
+	const vector<CAMERAACTION>* Get_Actions(void) { return &m_vecCameraAction; }
+	const CAMERAACTION*	Get_CurAction(void);
 	int					Get_CurActionIdx(void);
 	void				Set_CurAction(_vec3 vPick);
 

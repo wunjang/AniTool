@@ -14,7 +14,7 @@ CEventCamera::~CEventCamera(void)
 }
 
 
-void CEventCamera::Set_Action(vector<CAMERAACTION_ADVANCED>& vecAction, pair<_float, _float> fSmoothInOut)
+void CEventCamera::Set_Action(vector<CAMERAACTION>& vecAction, pair<_float, _float> fSmoothInOut)
 {
 	m_fActionCounter = 0.f;
 
@@ -26,7 +26,7 @@ void CEventCamera::Set_Action(vector<CAMERAACTION_ADVANCED>& vecAction, pair<_fl
 
 	if (fSmoothInOut != pair<_float, _float>(0.f, 0.f))
 	{
-		CAMERAACTION_ADVANCED CurCamera;
+		CAMERAACTION CurCamera;
 		CFreeCamera* pFreeCam = dynamic_cast<CFreeCamera*>(GET_INSTANCE(CCameraMgr)->Get_Camera(CAM_FREE));
 		CurCamera.vMoveTo = pFreeCam->Get_Pos();
 		CurCamera.vRotateTo = pFreeCam->Get_Angle();
@@ -62,7 +62,7 @@ void CEventCamera::Set_Action(vector<CAMERAACTION_ADVANCED>& vecAction, pair<_fl
 void CEventCamera::Stop(void)
 {
 	m_listActionQueue.clear();
-	m_LastLastAction = m_LastAction = CAMERAACTION_ADVANCED();
+	m_LastLastAction = m_LastAction = CAMERAACTION();
 
 	GET_INSTANCE(CCameraMgr)->Set_CurCamera(CAM_FREE);
 }
@@ -108,7 +108,7 @@ _int CEventCamera::Update(const _float& fTimeDelta)
 
 	if (m_listActionQueue.empty())
 	{
-		m_LastLastAction = m_LastAction = CAMERAACTION_ADVANCED();
+		m_LastLastAction = m_LastAction = CAMERAACTION();
 
 		return 0;
 	}
@@ -194,7 +194,7 @@ _bool CEventCamera::ReadActionData(const _float & fTimeDelta)
 			return false;
 	}
 
-	CAMERAACTION_ADVANCED CurAction = m_listActionQueue.front();
+	CAMERAACTION CurAction = m_listActionQueue.front();
 	// 여기서부터 복사본을 사용
 
 
@@ -211,7 +211,7 @@ _bool CEventCamera::ReadActionData(const _float & fTimeDelta)
 	return true;
 }
 
-void CEventCamera::ActionTarget(const _float & fTimeDelta, const CAMERAACTION_ADVANCED& CurAction)
+void CEventCamera::ActionTarget(const _float & fTimeDelta, const CAMERAACTION& CurAction)
 {
 	_float fTimeRate = m_fActionCounter / CurAction.fLength;
 
@@ -231,12 +231,12 @@ void CEventCamera::ActionTarget(const _float & fTimeDelta, const CAMERAACTION_AD
 	m_fFovY = m_LastAction.fViewAngleTo + (CurAction.fViewAngleTo - m_LastAction.fViewAngleTo) * fTimeRate;
 }
 
-void CEventCamera::ActionFree(const _float & fTimeDelta, const CAMERAACTION_ADVANCED& CurAction)
+void CEventCamera::ActionFree(const _float & fTimeDelta, const CAMERAACTION& CurAction)
 {
 	_float fTimeRate = m_fActionCounter / CurAction.fLength;
 
 
-	CAMERAACTION_ADVANCED NextAction;
+	CAMERAACTION NextAction;
 	auto iter_next = m_listActionQueue.begin();
 	iter_next++;
 
@@ -265,7 +265,7 @@ void CEventCamera::ActionFree(const _float & fTimeDelta, const CAMERAACTION_ADVA
 	m_vAt = m_vEye + vLook;
 }
 
-void CEventCamera::Shake(const _float & fTimeDelta, CAMERAACTION_ADVANCED & CurAction)
+void CEventCamera::Shake(const _float & fTimeDelta, CAMERAACTION & CurAction)
 {
 	const _int& EffectOption = CurAction.EffectOption;
 

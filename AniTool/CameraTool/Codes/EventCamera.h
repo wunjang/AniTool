@@ -23,7 +23,7 @@ public:
 	// Getter
 	size_t		Get_ActionLeft(void) { return m_listActionQueue.size(); }
 	// Setter
-	void		Set_Action(vector<CAMERAACTION_ADVANCED>& vecAction, pair<_float, _float> fSmoothInOut = { 0.f, 0.f });
+	void		Set_Action(vector<CAMERAACTION>& vecAction, pair<_float, _float> fSmoothInOut = { 0.f, 0.f });
 
 	// General
 	void		Stop(void);
@@ -36,14 +36,14 @@ public:
 private:
 	_bool ReadActionData(const _float& fTimeDelta);
 
-	void	ActionTarget(const _float& fTimeDelta, const CAMERAACTION_ADVANCED& CurAction);
-	void	ActionFree(const _float& fTimeDelta, const CAMERAACTION_ADVANCED& CurAction);
-	void	Shake(const _float& fTimeDelta, CAMERAACTION_ADVANCED& CurAction);
+	void	ActionTarget(const _float& fTimeDelta, const CAMERAACTION& CurAction);
+	void	ActionFree(const _float& fTimeDelta, const CAMERAACTION& CurAction);
+	void	Shake(const _float& fTimeDelta, CAMERAACTION& CurAction);
 
 private:
-	list<CAMERAACTION_ADVANCED>	m_listActionQueue;
-	CAMERAACTION_ADVANCED		m_LastAction;
-	CAMERAACTION_ADVANCED		m_LastLastAction;
+	list<CAMERAACTION>	m_listActionQueue;
+	CAMERAACTION		m_LastAction;
+	CAMERAACTION		m_LastLastAction;
 	_float				m_fActionCounter;
 
 	_float				m_fLineCounter = 0.f;

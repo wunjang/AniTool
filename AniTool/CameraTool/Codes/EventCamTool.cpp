@@ -114,7 +114,7 @@ void CEventCamTool::Set_FreeCamData(const _vec3& vPos, const _vec3& vAngle, cons
 	m_textFreeCamViewAngle.SetWindowTextW(strViewAngle);
 }
 
-const CAMERAACTION_ADVANCED * CEventCamTool::Get_CurAction(void)
+const CAMERAACTION * CEventCamTool::Get_CurAction(void)
 {
 	if (m_lboxCameraAction.GetCount() < m_lboxCameraAction.GetCurSel() || m_lboxCameraAction.GetCurSel() < 0)
 		return nullptr;
@@ -167,7 +167,7 @@ void CEventCamTool::OnLbnSelchangeCameraactionList()
 		return;
 	UpdateData(TRUE);
 
-	const CAMERAACTION_ADVANCED& CurAction = m_vecCameraAction[m_lboxCameraAction.GetCurSel()];
+	const CAMERAACTION& CurAction = m_vecCameraAction[m_lboxCameraAction.GetCurSel()];
 
 	m_editActionName.SetWindowTextW(CurAction.strName);
 
@@ -191,7 +191,7 @@ void CEventCamTool::OnBnClickedCameraactionAdd()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	m_lboxCameraAction.AddString(L"NewAction");
-	m_vecCameraAction.push_back(CAMERAACTION_ADVANCED());
+	m_vecCameraAction.push_back(CAMERAACTION());
 
 	UpdateData(TRUE);
 
@@ -219,7 +219,7 @@ void CEventCamTool::OnBnClickedButtonSaveactionedit()
 		return;
 
 	int iListCurSel = m_lboxCameraAction.GetCurSel();
-	CAMERAACTION_ADVANCED& CurAction = m_vecCameraAction[iListCurSel];
+	CAMERAACTION& CurAction = m_vecCameraAction[iListCurSel];
 
 	m_editActionName.GetWindowTextW(CurAction.strName);
 	m_lboxCameraAction.DeleteString(iListCurSel);
@@ -276,7 +276,7 @@ void CEventCamTool::OnBnClickedCheckIsFollowTarget()
 	if (m_lboxCameraAction.GetCount() < m_lboxCameraAction.GetCurSel() || m_lboxCameraAction.GetCurSel() < 0)
 		return;
 
-	const CAMERAACTION_ADVANCED& CurAction = m_vecCameraAction[m_lboxCameraAction.GetCurSel()];
+	const CAMERAACTION& CurAction = m_vecCameraAction[m_lboxCameraAction.GetCurSel()];
 
 	if (m_cbIsFollowTarget.GetCheck())
 	{
@@ -343,14 +343,13 @@ void CEventCamTool::OnBnClickedFilesave()
 	}
 
 	// Buffer
-	TCHAR szActionName[64] = L"";
 
 	DWORD dwByte = 0;
 	for (auto& rAction : m_vecCameraAction)
 	{
-		StrCpyW(szActionName, rAction.strName);
-		WriteFile(hFile, &szActionName, sizeof(szActionName), &dwByte, nullptr);
-		WriteFile(hFile, &rAction.bIsFollow, sizeof(CAMERAACTION_ADVANCED) - sizeof(CString), &dwByte, nullptr);
+		CAMERAACTION_SAVE Action(rAction);
+
+		WriteFile(hFile, &Action, sizeof(CAMERAACTION_SAVE), &dwByte, nullptr);
 	}
 	CloseHandle(hFile);
 
@@ -383,21 +382,30 @@ void CEventCamTool::OnBnClickedFileload()
 	m_lboxCameraAction.ResetContent();
 
 	// Buffer
-	TCHAR szActionName[64] = L"";
-	CAMERAACTION_ADVANCED Action;
+	CAMERAACTION_SAVE Action;
 
 	DWORD dwByte = 0;
 	while (true)
 	{
-		ReadFile(hFile, &szActionName, sizeof(szActionName), &dwByte, nullptr);
-		ReadFile(hFile, &Action.bIsFollow, sizeof(CAMERAACTION_ADVANCED) - sizeof(CString), &dwByte, nullptr);
+		ReadFile(hFile, &Action, sizeof(CAMERAACTION_SAVE), &dwByte, nullptr);
 
 		if (dwByte == 0)
 			break;
 
-		Action.strName = szActionName;
-		m_lboxCameraAction.AddString(Action.strName);
-		m_vecCameraAction.push_back(Action);
+		CAMERAACTION NewAction;
+		NewAction.strName = Action.szName;
+		NewAction.bIsFollow = Action.bIsFollow;
+		NewAction.eOBJ_ID = Action.eOBJ_ID;
+		NewAction.eObj_Idx = Action.eObj_Idx;
+		NewAction.vMoveTo = Action.vMoveTo;
+		NewAction.vRotateTo = Action.vRotateTo;
+		NewAction.fViewAngleTo = Action.fViewAngleTo;
+		NewAction.fLength = Action.fLength;
+		NewAction.fDistance = Action.fDist;
+		NewAction.EffectOption = Action.EffectOption;
+
+		m_vecCameraAction.push_back(NewAction);
+		m_lboxCameraAction.AddString(m_vecCameraAction.back().strName);
 	}
 
 	CloseHandle(hFile);
@@ -486,7 +494,7 @@ void CEventCamTool::OnBnClickedFreecamMove()
 	if (m_lboxCameraAction.GetCount() < m_lboxCameraAction.GetCurSel() || m_lboxCameraAction.GetCurSel() < 0)
 		return;
 
-	const CAMERAACTION_ADVANCED& rCamAction = m_vecCameraAction[m_lboxCameraAction.GetCurSel()];
+	const CAMERAACTION& rCamAction = m_vecCameraAction[m_lboxCameraAction.GetCurSel()];
 
 	dynamic_cast<CFreeCamera*>(GET_INSTANCE(CCameraMgr)->Get_Camera(CAM_FREE))->Set_Pos(rCamAction.vMoveTo);
 	dynamic_cast<CFreeCamera*>(GET_INSTANCE(CCameraMgr)->Get_Camera(CAM_FREE))->Set_Angle(rCamAction.vRotateTo);
@@ -500,7 +508,7 @@ void CEventCamTool::OnBnClickedCameracationCopy()
 	if (m_lboxCameraAction.GetCount() < m_lboxCameraAction.GetCurSel() || m_lboxCameraAction.GetCurSel() < 0)
 		return;
 
-	CAMERAACTION_ADVANCED CopyAction = m_vecCameraAction[m_lboxCameraAction.GetCurSel()];
+	CAMERAACTION CopyAction = m_vecCameraAction[m_lboxCameraAction.GetCurSel()];
 	CopyAction.strName += L" - Copy";
 	m_vecCameraAction.push_back(CopyAction);
 	m_lboxCameraAction.AddString(CopyAction.strName);
