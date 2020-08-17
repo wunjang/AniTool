@@ -55,8 +55,8 @@ protected:
 public:
 	virtual void OnInitialUpdate();
 	HRESULT SetUp_RenderTarget(LPDIRECT3DDEVICE9 & pGraphicDev);
-	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
+	void Get_KeyInput();
+	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 };
 
 #ifndef _DEBUG  // CamToolView.cpp의 디버그 버전
