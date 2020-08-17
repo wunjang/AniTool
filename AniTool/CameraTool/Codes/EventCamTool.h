@@ -43,6 +43,7 @@ public:
 	const CAMERAACTION*	Get_CurAction(void);
 	int					Get_CurActionIdx(void);
 	void				Set_CurAction(_vec3 vPick);
+	void				Set_TargetPosData(_vec3 vPos);
 
 	void SerchFile(void);
 
@@ -77,7 +78,7 @@ public:
 	CStatic m_textFreeCamAngle;
 	afx_msg void OnBnClickedFreecamCopy();
 	CStatic m_textFreeCamViewAngle;
-	afx_msg void OnBnClickedTargetmove();
+	afx_msg void OnBnClickedTargetDataApply();
 	afx_msg void OnBnClickedTargetCopycam();
 	float m_fTargetPos[3];
 	float m_fTargetAngle[3];

@@ -21,7 +21,7 @@ CEventCamTool::CEventCamTool(CWnd* pParent /*=NULL*/)
 	, m_fDistance(0)
 	, m_fActionLength(0)
 	, m_fViewAngleTo(0)
-	, m_fTargetScale(0)
+	, m_fTargetScale(0.003f)
 {
 	ZeroMemory(m_vMoveTo, sizeof(float) * 3);
 	ZeroMemory(m_vRotateTo, sizeof(float) * 3);
@@ -93,7 +93,7 @@ BEGIN_MESSAGE_MAP(CEventCamTool, CDialogEx)
 	ON_LBN_SELCHANGE(IDC_FILELIST, &CEventCamTool::OnLbnSelchangeFilelist)
 	ON_BN_CLICKED(IDC_BUTTON_PLAYEVENT, &CEventCamTool::OnBnClickedButtonPlayevent)
 	ON_BN_CLICKED(IDC_FREECAM_COPY, &CEventCamTool::OnBnClickedFreecamCopy)
-	ON_BN_CLICKED(IDC_TARGETMOVE, &CEventCamTool::OnBnClickedTargetmove)
+	ON_BN_CLICKED(IDC_TARGETMOVE, &CEventCamTool::OnBnClickedTargetDataApply)
 	ON_BN_CLICKED(IDC_TARGET_COPYCAM, &CEventCamTool::OnBnClickedTargetCopycam)
 	ON_BN_CLICKED(IDC_STOP, &CEventCamTool::OnBnClickedStop)
 	ON_BN_CLICKED(IDC_FREECAM_MOVE, &CEventCamTool::OnBnClickedFreecamMove)
@@ -138,6 +138,14 @@ void CEventCamTool::Set_CurAction(_vec3 vPick)
 		return;
 
 	m_vecCameraAction[m_lboxCameraAction.GetCurSel()].vMoveTo = vPick;
+}
+
+void CEventCamTool::Set_TargetPosData(_vec3 vPos)
+{
+	for (int i = 0; i < 3; ++i)
+		m_fTargetPos[i] = vPos[i];
+
+	UpdateData(FALSE);
 }
 
 void CEventCamTool::SerchFile(void)
@@ -454,7 +462,7 @@ void CEventCamTool::OnBnClickedFreecamCopy()
 }
 
 
-void CEventCamTool::OnBnClickedTargetmove()
+void CEventCamTool::OnBnClickedTargetDataApply()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	_vec3 vPos, vAngle;
@@ -465,6 +473,7 @@ void CEventCamTool::OnBnClickedTargetmove()
 	NULL_CHECK(pTransform);
 	pTransform->Set_Pos(&vPos);
 	pTransform->Set_Angle(vAngle);
+	pTransform->Set_Scale(m_fTargetScale, m_fTargetScale, m_fTargetScale);
 }
 
 
