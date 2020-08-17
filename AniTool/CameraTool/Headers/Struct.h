@@ -39,7 +39,9 @@ struct CAMERAACTION_SAVE
 		, vMoveTo(rAction.vMoveTo), vRotateTo(rAction.vRotateTo), fViewAngleTo(rAction.fViewAngleTo)
 		, fLength(rAction.fLength), fDist(rAction.fDistance)
 		, EffectOption(rAction.EffectOption)
-	{}
+	{
+		lstrcpy(szName, rAction.strName.GetString());
+	}
 	_tchar		szName[64];
 
 	_bool		bIsFollow;
