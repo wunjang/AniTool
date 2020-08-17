@@ -138,7 +138,7 @@ void CFreeCamera::Mouse_Move(const _float& fTimeDelta)
 {
 	_long	dwMouseMove = 0;
 
-	if (ENGINE::MousePressing(ENGINE::DIM_MB))
+	if (ENGINE::MousePressing(ENGINE::DIM_RB))
 	{
 		if (dwMouseMove = ENGINE::Get_DIMouseMove(ENGINE::DIMS_Y))
 			m_vAngle.x += float(dwMouseMove) * 0.1f;
