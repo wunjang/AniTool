@@ -55,6 +55,7 @@ protected:
 public:
 	virtual void OnInitialUpdate();
 	HRESULT SetUp_RenderTarget(LPDIRECT3DDEVICE9 & pGraphicDev);
+	
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 };

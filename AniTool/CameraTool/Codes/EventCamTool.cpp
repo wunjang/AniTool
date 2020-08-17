@@ -21,6 +21,7 @@ CEventCamTool::CEventCamTool(CWnd* pParent /*=NULL*/)
 	, m_fDistance(0)
 	, m_fActionLength(0)
 	, m_fViewAngleTo(0)
+	, m_fTargetScale(0)
 {
 	ZeroMemory(m_vMoveTo, sizeof(float) * 3);
 	ZeroMemory(m_vRotateTo, sizeof(float) * 3);
@@ -76,6 +77,7 @@ void CEventCamTool::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_TARGETROT_Z, m_fTargetAngle[ENGINE::ROT_Z]);
 	DDX_Text(pDX, IDC_SMOOTHIN, m_fSmoothLength[SMOOTH_IN]);
 	DDX_Text(pDX, IDC_SMOOTHOUT, m_fSmoothLength[SMOOTH_OUT]);
+	DDX_Text(pDX, IDC_TARGETSCALE, m_fTargetScale);
 }
 
 

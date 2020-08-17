@@ -64,6 +64,8 @@
 #define IDC_SMOOTHIN                    1083
 #define IDC_SMOOTHOUT                   1084
 #define IDC_CLEARSMOOTH                 1085
+#define IDC_TARGETROT_X2                1086
+#define IDC_TARGETSCALE                 1086
 
 // Next default values for new objects
 // 
