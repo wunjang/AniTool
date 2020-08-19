@@ -99,6 +99,7 @@ BEGIN_MESSAGE_MAP(CEventCamTool, CDialogEx)
 	ON_BN_CLICKED(IDC_FREECAM_MOVE, &CEventCamTool::OnBnClickedFreecamMove)
 	ON_BN_CLICKED(IDC_CAMERACATION_COPY, &CEventCamTool::OnBnClickedCameracationCopy)
 	ON_BN_CLICKED(IDC_CLEARSMOOTH, &CEventCamTool::OnBnClickedClearsmooth)
+	ON_BN_CLICKED(IDC_ESCAPESTOP, &CEventCamTool::OnBnClickedEscapestop)
 END_MESSAGE_MAP()
 
 
@@ -268,6 +269,7 @@ BOOL CEventCamTool::OnInitDialog()
 	m_cboxEffect.AddString(L"Shake_At");
 	m_cboxEffect.AddString(L"Shake_EyeAndAtDeffrent");
 	m_cboxEffect.AddString(L"Shake_EyeAndAtSame");
+	m_cboxEffect.AddString(L"Stop");
 	m_cboxEffect.SetCurSel(0);
 
 	SerchFile();
@@ -535,4 +537,12 @@ void CEventCamTool::OnBnClickedClearsmooth()
 	m_fSmoothLength[SMOOTH_OUT] = 0.f;
 
 	UpdateData(FALSE);
+}
+
+
+void CEventCamTool::OnBnClickedEscapestop()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+
+	GET_INSTANCE(CCameraMgr)->EscapeStop();
 }

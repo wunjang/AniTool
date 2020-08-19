@@ -64,8 +64,9 @@
 #define IDC_SMOOTHIN                    1083
 #define IDC_SMOOTHOUT                   1084
 #define IDC_CLEARSMOOTH                 1085
-#define IDC_TARGETROT_X2                1086
 #define IDC_TARGETSCALE                 1086
+#define IDC_BUTTON2                     1087
+#define IDC_ESCAPESTOP                  1087
 
 // Next default values for new objects
 // 
@@ -73,7 +74,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        314
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1086
+#define _APS_NEXT_CONTROL_VALUE         1088
 #define _APS_NEXT_SYMED_VALUE           314
 #endif
 #endif

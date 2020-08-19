@@ -22,6 +22,8 @@ public:
 	vector<_vec3>*		Get_Line(void) { return &m_vecLine; }
 	_float				Get_FieldHeight(void) { return m_fHeightFieldHeight; }
 
+	_bool				EscapeStop(void);
+
 	_bool Picking(LPDIRECT3DDEVICE9 pGraphicDev, _vec3* pOut);
 
 private:

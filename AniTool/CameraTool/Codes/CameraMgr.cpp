@@ -21,6 +21,11 @@ size_t CCameraMgr::Get_EventCameraActionLeft(void)
 	return dynamic_cast<CEventCamera*>(m_mapCamera[CAMERATYPE::CAM_EVENT])->Get_ActionLeft();
 }
 
+_bool CCameraMgr::EscapeStop(void)
+{
+	return dynamic_cast<CEventCamera*>(m_mapCamera[CAMERATYPE::CAM_EVENT])->EscapeStop();
+}
+
 _bool CCameraMgr::Picking(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 * pOut)
 {
 	if (::GetFocus() != g_MFChWnd)

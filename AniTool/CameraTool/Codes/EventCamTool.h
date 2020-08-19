@@ -90,4 +90,5 @@ public:
 	afx_msg void OnBnClickedClearsmooth();
 	float m_fSmoothLength[SMOOTH_END];
 	float m_fTargetScale;
+	afx_msg void OnBnClickedEscapestop();
 };

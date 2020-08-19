@@ -62,9 +62,20 @@ void CEventCamera::Set_Action(vector<CAMERAACTION>& vecAction, pair<_float, _flo
 void CEventCamera::Stop(void)
 {
 	m_listActionQueue.clear();
+	m_fActionCounter = 0.f;
 	m_LastLastAction = m_LastAction = CAMERAACTION();
 
 	GET_INSTANCE(CCameraMgr)->Set_CurCamera(CAM_FREE);
+}
+
+_bool CEventCamera::EscapeStop(void)
+{
+	if (m_listActionQueue.front().EffectOption == CAMERAEFFECT::EFFECT_STOP)
+	{
+		m_listActionQueue.front().EffectOption = CAMERAEFFECT::EFFECT_NONE;
+		return true;
+	}
+	return false;
 }
 
 HRESULT CEventCamera::Initialize()
@@ -179,6 +190,11 @@ void CEventCamera::Render(const _float & fTimeDelta)
 
 _bool CEventCamera::ReadActionData(const _float & fTimeDelta)
 {
+	if (m_listActionQueue.front().EffectOption == CAMERAEFFECT::EFFECT_STOP)
+	{
+		return true;
+	}
+
 	m_fActionCounter += fTimeDelta;
 	if (m_fActionCounter > m_listActionQueue.front().fLength)
 	{

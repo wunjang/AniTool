@@ -27,6 +27,7 @@ public:
 
 	// General
 	void		Stop(void);
+	_bool		EscapeStop(void);
 
 public:
 	HRESULT				Initialize();
