@@ -44,8 +44,8 @@ _int CSampleObject::Update(const _float & fTimeDelta)
 	
 	CAniSync::Get_Dialog()->Set_UpdateAniTime((_int)(m_pMeshCom[0]->Get_AniCtrl()->Get_AniCtrl()->GetTime() * 30.0));
 	
-	_matrix matTwo, matFaceRot, matHandRot;
-	D3DXMatrixScaling(&matTwo, 2.f, 2.f, 2.f);
+	_matrix matThree, matFaceRot, matHandRot;
+	D3DXMatrixScaling(&matThree, 2.4f, 2.4f, 2.4f);
 
 	D3DXMatrixRotationYawPitchRoll(&matFaceRot, D3DXToRadian(90.f), 0.f, D3DXToRadian(270.f));
 	D3DXMatrixRotationYawPitchRoll(&matHandRot, D3DXToRadian(90.f), 0.f, D3DXToRadian(90.f));
@@ -53,11 +53,11 @@ _int CSampleObject::Update(const _float & fTimeDelta)
 	_int iExit = CGameObject::Update(fTimeDelta);
 
 	m_matTransform[BODY]	= *m_pTransformCom->Get_WorldMatrix();
-	m_matTransform[HEAD]	= matTwo * matFaceRot * m_pMeshCom[BODY]->Get_FrameByName("Head")->CombinedTransformationMatrix * *m_pTransformCom->Get_WorldMatrix();
-	m_matTransform[FACE]	= matTwo * matFaceRot * m_pMeshCom[BODY]->Get_FrameByName("Head")->CombinedTransformationMatrix * *m_pTransformCom->Get_WorldMatrix();
-	m_matTransform[EYE]		= matTwo * matFaceRot * m_pMeshCom[BODY]->Get_FrameByName("Head")->CombinedTransformationMatrix * *m_pTransformCom->Get_WorldMatrix();
-	m_matTransform[HANDL]	= matTwo * matHandRot * m_pMeshCom[BODY]->Get_FrameByName("HandL")->CombinedTransformationMatrix * *m_pTransformCom->Get_WorldMatrix();
-	m_matTransform[HANDR]	= matTwo * matHandRot * m_pMeshCom[BODY]->Get_FrameByName("HandR")->CombinedTransformationMatrix * *m_pTransformCom->Get_WorldMatrix();
+	m_matTransform[HEAD]	= matThree * matFaceRot * m_pMeshCom[BODY]->Get_FrameByName("Head")->CombinedTransformationMatrix * *m_pTransformCom->Get_WorldMatrix();
+	m_matTransform[FACE]	= matThree * matFaceRot * m_pMeshCom[BODY]->Get_FrameByName("Head")->CombinedTransformationMatrix * *m_pTransformCom->Get_WorldMatrix();
+	m_matTransform[EYE]		= matThree * matFaceRot * m_pMeshCom[BODY]->Get_FrameByName("Head")->CombinedTransformationMatrix * *m_pTransformCom->Get_WorldMatrix();
+	m_matTransform[HANDL]	= matThree * matHandRot * m_pMeshCom[BODY]->Get_FrameByName("HandL")->CombinedTransformationMatrix * *m_pTransformCom->Get_WorldMatrix();
+	m_matTransform[HANDR]	= matThree * matHandRot * m_pMeshCom[BODY]->Get_FrameByName("HandR")->CombinedTransformationMatrix * *m_pTransformCom->Get_WorldMatrix();
 
 
 

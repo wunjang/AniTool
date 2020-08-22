@@ -102,7 +102,8 @@ HRESULT CMainScene::Ready_Prototype(void)
 {
 	ENGINE::CComponent*		pInstance = nullptr;
 
-	FAILED_CHECK_RETURN(ENGINE::Add_Prototype(0, L"Mario_Body", ENGINE::CDynamicMesh::Create(m_pGraphicDev, L"../Resource/Mesh/DynamicMesh/Mario/body/", L"body.X")), E_FAIL);
+	//FAILED_CHECK_RETURN(ENGINE::Add_Prototype(0, L"Mario_Body", ENGINE::CDynamicMesh::Create(m_pGraphicDev, L"../Resource/Mesh/DynamicMesh/Mario/body/", L"body.X")), E_FAIL);
+	FAILED_CHECK_RETURN(ENGINE::Add_Prototype(0, L"Mario_Body", ENGINE::CDynamicMesh::Create(m_pGraphicDev, L"../Resource/Mesh/DynamicMesh/Mario/body_c/", L"Mario_Body.X")), E_FAIL);
 	FAILED_CHECK_RETURN(ENGINE::Add_Prototype(0, L"Mario_Head", ENGINE::CDynamicMesh::Create(m_pGraphicDev, L"../Resource/Mesh/DynamicMesh/Mario/head/", L"head.X")), E_FAIL);
 	FAILED_CHECK_RETURN(ENGINE::Add_Prototype(0, L"Mario_Face", ENGINE::CDynamicMesh::Create(m_pGraphicDev, L"../Resource/Mesh/DynamicMesh/Mario/face/", L"face.X")), E_FAIL);
 	FAILED_CHECK_RETURN(ENGINE::Add_Prototype(0, L"Mario_Eye", ENGINE::CDynamicMesh::Create(m_pGraphicDev, L"../Resource/Mesh/DynamicMesh/Mario/eye/", L"eye.X")), E_FAIL);

@@ -13,8 +13,6 @@ IMPLEMENT_DYNAMIC(CAniSync, CDialogEx)
 
 CAniSync::CAniSync(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_ANISYNC, pParent)
-	, m_strSaveFileName(_T(""))
-	, m_strPlayBarText(_T(""))
 	, m_iFullTime(0)
 	, m_iCurTime(0)
 {
@@ -35,12 +33,12 @@ void CAniSync::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COMBO4, m_cboxSubParts[3]);
 	DDX_Control(pDX, IDC_COMBO5, m_cboxSubParts[4]);
 	DDX_Control(pDX, IDC_CHECK3, m_bIsFindSameNameIfExist);
-	DDX_Text(pDX, IDC_EDIT1, m_strSaveFileName);
 	DDX_Control(pDX, IDC_SLIDER1, m_sldPlayBar);
 	DDX_Control(pDX, IDC_CHECK2, m_bIsAnimationLoop);
 	DDX_Control(pDX, IDC_BUTTON3, m_btnPlayStop);
 	DDX_Text(pDX, IDC_FULLTIME, m_iFullTime);
 	DDX_Text(pDX, IDC_CURTIME, m_iCurTime);
+	DDX_Control(pDX, IDC_EDIT1, m_editFileName);
 }
 
 
@@ -109,7 +107,7 @@ BOOL CAniSync::OnInitDialog()
 	m_bIsFindSameNameIfExist.SetCheck(true);
 	m_bIsAnimationLoop.SetCheck(true);
 
-	m_strSaveFileName = L"PlayerAnimationSet";
+	m_editFileName.SetWindowTextW(L"PlayerAnimationSet");
 
 	OnLbnSelchangeMainPartsAni();
 
@@ -229,7 +227,9 @@ void CAniSync::OnBnClickedSaveAniComboSet()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	UpdateData(TRUE);
-	CString strFullPath = L"../Data/" + m_strSaveFileName + L".dat";
+	CString strFullPath;
+	m_editFileName.GetWindowTextW(strFullPath);
+	strFullPath = L"../Data/" + strFullPath +L".dat";
 	HANDLE hFile = CreateFile(strFullPath, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
 	if (INVALID_HANDLE_VALUE == hFile)
 	{
@@ -265,7 +265,9 @@ void CAniSync::OnBnClickedLoadAniComboSet()
 	m_mapAnimationCombine.clear();
 
 	UpdateData(TRUE);
-	CString strFullPath = L"../Data/" + m_strSaveFileName + L".dat";
+	CString strFullPath;
+	m_editFileName.GetWindowTextW(strFullPath);
+	strFullPath = L"../Data/" + strFullPath + L".dat";
 	
 	HANDLE hFile = CreateFile(strFullPath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 	if (INVALID_HANDLE_VALUE == hFile)

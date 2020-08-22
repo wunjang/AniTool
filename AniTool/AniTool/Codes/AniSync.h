@@ -56,7 +56,6 @@ public:
 
 	afx_msg void OnBnClickedSaveAniComboSet();
 	afx_msg void OnBnClickedLoadAniComboSet();
-	CString m_strSaveFileName;
 
 
 	CSliderCtrl m_sldPlayBar;
@@ -69,7 +68,7 @@ public:
 	CButton m_btnPlayStop;
 	_bool m_bIsPlaying;
 	afx_msg void OnBnClickedPlayStop();
-	CString m_strPlayBarText;
 	UINT m_iFullTime;
 	UINT m_iCurTime;
+	CEdit m_editFileName;
 };
