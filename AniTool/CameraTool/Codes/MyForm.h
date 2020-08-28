@@ -9,7 +9,7 @@ class CMyForm : public CFormView
 {
 	DECLARE_DYNCREATE(CMyForm)
 public:
-	enum TAB_TOOL { TOOL_EVENTCAM, TOOL_END };
+	enum TAB_TOOL { TOOL_EVENTCAM, TOOL_MAPSELECT, TOOL_END };
 
 protected:
 	CMyForm();           // 동적 만들기에 사용되는 protected 생성자입니다.

@@ -17,6 +17,8 @@ public:
 	virtual _int Update_Scene(const _float& fTimeDelta) override;
 	virtual void Render_Scene(void) override;
 	
+	static HRESULT		Load_MapData(LPDIRECT3DDEVICE9 pGraphicDev, const ENGINE::LAYER_TYPE eLayerType, wstring wstrFilePath);
+
 private:
 	HRESULT		Ready_Prototype(void);
 	HRESULT		Ready_Environment_Layer(const ENGINE::LAYER_TYPE eLayerType);
@@ -29,7 +31,6 @@ private:
 
 
 
-	HRESULT		Load_MapData(const ENGINE::LAYER_TYPE eLayerType, wstring wstrFilePath);
 
 public:
 	static CMainScene*	Create(LPDIRECT3DDEVICE9 pGraphicDev);

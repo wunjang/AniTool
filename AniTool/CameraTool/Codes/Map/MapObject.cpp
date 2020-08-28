@@ -107,16 +107,16 @@ HRESULT CMapObject::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	return S_OK;
 }
 
-//CMapObject * CMapObject::Create(LPDIRECT3DDEVICE9 pGraphicDev, ENGINE::_WorldInfo tInfo, const wstring wstrResourseName)
-//{
-//	CMapObject* pInstance = new CMapObject(pGraphicDev);
-//
-//	if (FAILED(pInstance->Initialize(tInfo, wstrResourseName)))
-//	{
-//		ENGINE::Safe_Release(pInstance);
-//	}
-//	return pInstance;
-//}
+CMapObject * CMapObject::Create(LPDIRECT3DDEVICE9 pGraphicDev, ENGINE::_WorldInfo tInfo, const wstring wstrResourseName)
+{
+	CMapObject* pInstance = new CMapObject(pGraphicDev);
+
+	if (FAILED(pInstance->Initialize(tInfo, wstrResourseName)))
+	{
+		ENGINE::Safe_Release(pInstance);
+	}
+	return pInstance;
+}
 
 void CMapObject::Free(void)
 {

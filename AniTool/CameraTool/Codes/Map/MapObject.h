@@ -22,8 +22,8 @@ protected:
 	ENGINE::CTransform*			m_pTransformCom;
 	ENGINE::CShader*			m_pShaderCom;
 	
-//public:
-//	static CMapObject* Create(LPDIRECT3DDEVICE9 pGraphicDev, ENGINE::_WorldInfo tInfo, const wstring wstrResourseName);
+public:
+	static CMapObject* Create(LPDIRECT3DDEVICE9 pGraphicDev, ENGINE::_WorldInfo tInfo, const wstring wstrResourseName);
 
 protected:
 	virtual void	Free(void);

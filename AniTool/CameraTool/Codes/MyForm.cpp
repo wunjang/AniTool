@@ -6,6 +6,7 @@
 #include "MyForm.h"
 
 #include "EventCamTool.h"
+#include "MapSelectionTool.h"
 
 
 HWND g_FormHWND;
@@ -69,9 +70,9 @@ void CMyForm::OnInitialUpdate()
 	m_pTab[TOOL_EVENTCAM] = new CEventCamTool;
 	m_pTab[TOOL_EVENTCAM]->Create(IDD_EVENTCAMTOOL, &m_tabTools);
 	
-	//m_tabTools.InsertItem(1, L"Action");
-	//m_pTab[TOOL_ACTION] = new CActionTool;
-	//m_pTab[TOOL_ACTION]->Create(IDD_ACTIONTOOL, &m_tabTools);
+	m_tabTools.InsertItem(1, L"MapSelect");
+	m_pTab[TOOL_MAPSELECT] = new CMapSelectionTool;
+	m_pTab[TOOL_MAPSELECT]->Create(IDD_MAPSELECTIONTOOL, &m_tabTools);
 
 
 	// 공통부
@@ -90,10 +91,9 @@ void CMyForm::OnInitialUpdate()
 void CMyForm::OnTcnSelchangeTab(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	//for (int i = 0; i < TOOL_END; ++i)
-	//	m_pTab[i]->ShowWindow(SW_HIDE);
-	//m_pTab[m_tabTools.GetCurSel()]->ShowWindow(SW_SHOW);
-	//ENGINE::CScene* pScene = nullptr;
+	for (int i = 0; i < TOOL_END; ++i)
+		m_pTab[i]->ShowWindow(SW_HIDE);
+	m_pTab[m_tabTools.GetCurSel()]->ShowWindow(SW_SHOW);
 
 
 	*pResult = 0;

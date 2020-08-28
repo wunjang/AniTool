@@ -46,9 +46,6 @@
     <Filter Include="04. GameObject\02. MoveSample">
       <UniqueIdentifier>{5cc3139f-0b78-4080-8801-841402b628a5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. Tools\01. ActionTool">
-      <UniqueIdentifier>{514f5f24-b438-47b5-852d-2e42fe167cf1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04. GameObject\00. Camera\01. EventCamera">
       <UniqueIdentifier>{bb14948c-e33c-438e-9a6e-60402ae669e4}</UniqueIdentifier>
     </Filter>
@@ -66,6 +63,12 @@
     </Filter>
     <Filter Include="04. GameObject\06. TestTarget">
       <UniqueIdentifier>{14bd2c12-4889-4eb7-8c9c-a4adc237a06c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Tools\01. MapTool">
+      <UniqueIdentifier>{514f5f24-b438-47b5-852d-2e42fe167cf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Function">
+      <UniqueIdentifier>{bb238bcc-f256-45f9-a44a-4d2659e19329}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -126,24 +129,6 @@
     <ClInclude Include="..\Codes\CameraMgr.h">
       <Filter>04. GameObject\00. Camera</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\Map\Bridge.h">
-      <Filter>04. GameObject\03. Map</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Codes\Map\Decoration.h">
-      <Filter>04. GameObject\03. Map</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Codes\Map\NavMapObject.h">
-      <Filter>04. GameObject\03. Map</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Codes\Map\Trempoline.h">
-      <Filter>04. GameObject\03. Map</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Codes\Map\Water.h">
-      <Filter>04. GameObject\03. Map</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Codes\Map\Breakable.h">
-      <Filter>04. GameObject\03. Map</Filter>
-    </ClInclude>
     <ClInclude Include="..\Codes\Map\MapObject.h">
       <Filter>04. GameObject\03. Map</Filter>
     </ClInclude>
@@ -155,6 +140,12 @@
     </ClInclude>
     <ClInclude Include="..\Codes\SmapleObject.h">
       <Filter>04. GameObject\01. SampleObj</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\MapSelectionTool.h">
+      <Filter>02. Tools\01. MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Function.h">
+      <Filter>05. Function</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -194,24 +185,6 @@
     <ClCompile Include="..\Codes\CameraMgr.cpp">
       <Filter>04. GameObject\00. Camera</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\Map\Bridge.cpp">
-      <Filter>04. GameObject\03. Map</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\Map\Decoration.cpp">
-      <Filter>04. GameObject\03. Map</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\Map\NavMapObject.cpp">
-      <Filter>04. GameObject\03. Map</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\Map\Trempoline.cpp">
-      <Filter>04. GameObject\03. Map</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\Map\Water.cpp">
-      <Filter>04. GameObject\03. Map</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\Map\Breakable.cpp">
-      <Filter>04. GameObject\03. Map</Filter>
-    </ClCompile>
     <ClCompile Include="..\Codes\Map\MapObject.cpp">
       <Filter>04. GameObject\03. Map</Filter>
     </ClCompile>
@@ -223,6 +196,12 @@
     </ClCompile>
     <ClCompile Include="..\Codes\SmapleObject.cpp">
       <Filter>04. GameObject\01. SampleObj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MapSelectionTool.cpp">
+      <Filter>02. Tools\01. MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Function.cpp">
+      <Filter>05. Function</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

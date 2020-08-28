@@ -7,13 +7,10 @@
 #include "HeightField.h"
 #include "CameraPath.h"
 
+#include "Function.h"
+
 // Map
-#include "Map\Breakable.h"
-#include "Map\Decoration.h"
-#include "Map\Trempoline.h"
-#include "Map\Bridge.h"
-#include "Map\NavMapObject.h"
-#include "Map\Water.h"
+#include "Map\MapObject.h"
 
 CMainScene::CMainScene(LPDIRECT3DDEVICE9 pGraphicDev)
 	: ENGINE::CScene(pGraphicDev)
@@ -49,7 +46,7 @@ void CMainScene::Render_Scene(void)
 	// DEBUG 코드 출력 용도
 }
 
-HRESULT CMainScene::Load_MapData(const ENGINE::LAYER_TYPE eLayerType, wstring wstrFilePath)
+HRESULT CMainScene::Load_MapData(LPDIRECT3DDEVICE9 pGraphicDev, const ENGINE::LAYER_TYPE eLayerType, wstring wstrFilePath)
 {
 	// GetPathName - 파일 경로 얻어오는 함수. 
 	HANDLE hFile = CreateFile(wstrFilePath.c_str(), GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
@@ -60,7 +57,6 @@ HRESULT CMainScene::Load_MapData(const ENGINE::LAYER_TYPE eLayerType, wstring ws
 
 	ENGINE::OBJ_ID eID;
 	ENGINE::_WorldInfo tInfo;
-	wstring wstrResourceName;
 	TCHAR szString[128] = L"";
 
 	while (true)
@@ -77,72 +73,7 @@ HRESULT CMainScene::Load_MapData(const ENGINE::LAYER_TYPE eLayerType, wstring ws
 		ReadFile(hFile, &tInfo.vAngle, sizeof(D3DXVECTOR3), &dwByte, nullptr);
 		ReadFile(hFile, &tInfo.vScale, sizeof(D3DXVECTOR3), &dwByte, nullptr);
 
-		ENGINE::CGameObject*		pGameObject = nullptr;
-		wstrResourceName = szString;
-
-		switch (eID)
-		{
-		case ENGINE::OBJ_ID::MAP_WFW_GROUND:
-
-			if (wstrResourceName == L"HomeGround000")
-			{
-				pGameObject = CBreakable::Create(m_pGraphicDev, tInfo, wstrResourceName);
-				NULL_CHECK_RETURN_MSG(pGameObject, E_FAIL, L"MapData Load Fail");
-				m_Layers[eLayerType]->Add_GameObject(ENGINE::OBJ_ID::MAP_WFW_GROUND, pGameObject);
-			}
-			else
-			{
-
-				pGameObject = CDecoration::Create(m_pGraphicDev, tInfo, wstrResourceName);
-				NULL_CHECK_RETURN_MSG(pGameObject, E_FAIL, L"MapData Load Fail");
-				m_Layers[eLayerType]->Add_GameObject(ENGINE::OBJ_ID::MAP_WFW_GROUND, pGameObject);
-			}
-
-			break;
-		case ENGINE::OBJ_ID::MAP_WFW_WATER000:
-
-			pGameObject = CWater::Create(m_pGraphicDev, tInfo, wstrResourceName);
-			NULL_CHECK_RETURN_MSG(pGameObject, E_FAIL, L"MapData Load Fail");
-			m_Layers[eLayerType]->Add_GameObject(ENGINE::OBJ_ID::MAP_WFW_WATER000, pGameObject);
-
-			break;
-		case ENGINE::OBJ_ID::MAP_WFW_BREAKABLE:
-
-			pGameObject = CBreakable::Create(m_pGraphicDev, tInfo, wstrResourceName);
-			NULL_CHECK_RETURN_MSG(pGameObject, E_FAIL, L"MapData Load Fail");
-			m_Layers[eLayerType]->Add_GameObject(ENGINE::OBJ_ID::MAP_WFW_BREAKABLE, pGameObject);
-
-			break;
-		case ENGINE::OBJ_ID::MAP_WFW_BUSH:
-
-			pGameObject = CDecoration::Create(m_pGraphicDev, tInfo, wstrResourceName);
-			NULL_CHECK_RETURN_MSG(pGameObject, E_FAIL, L"MapData Load Fail");
-			m_Layers[eLayerType]->Add_GameObject(ENGINE::OBJ_ID::MAP_WFW_GROUND, pGameObject);
-
-			break;
-		case ENGINE::OBJ_ID::MAP_WFW_TRAMPOLINE:
-
-			//pGameObject = CTrempoline::Create(m_pGraphicDev, tInfo, wstrResourceName);
-			//NULL_CHECK_RETURN_MSG(pGameObject, E_FAIL, L"MapData Load Fail");
-			//m_Layers[eLayerType]->Add_GameObject(ENGINE::OBJ_ID::MAP_WFW_GROUND, pGameObject);
-
-			break;
-		case ENGINE::OBJ_ID::MAP_WFW_STONEBRIGE:
-
-			pGameObject = CBridge::Create(m_pGraphicDev, tInfo, wstrResourceName);
-			NULL_CHECK_RETURN_MSG(pGameObject, E_FAIL, L"MapData Load Fail");
-			m_Layers[eLayerType]->Add_GameObject(ENGINE::OBJ_ID::MAP_WFW_GROUND, pGameObject);
-
-			break;
-
-		case ENGINE::OBJ_ID::MAP_WFW_BACKGROUND:
-
-
-
-			break;
-		default:
-			break;
-		}
+		ENGINE::Add_GameObject(ENGINE::LAYER_GAMEOBJECT, ENGINE::TERRAIN, CMapObject::Create(pGraphicDev, tInfo, szString));
 	}
 	CloseHandle(hFile);
 	return S_OK;
@@ -202,7 +133,6 @@ HRESULT CMainScene::Ready_GameLogic_Layer(const ENGINE::LAYER_TYPE eLayerType)
 	pGameObject = CCameraPath::Create(m_pGraphicDev);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(ENGINE::OBJ_ID::UI, pGameObject), E_FAIL);
 	
-	FAILED_CHECK_RETURN(Load_MapData(eLayerType, L"../Data/Map/WaterfallWorld/MapObject/New_Test6.dat"), E_FAIL);
 
 
 
@@ -232,8 +162,8 @@ HRESULT CMainScene::Ready_Prototype(void)
 	ENGINE::Get_Renderer()->Set_GraphicDev(m_pGraphicDev);
 
 	FAILED_CHECK(ENGINE::Add_Prototype(0, L"TestTerrain", ENGINE::CVIBuffer_Terrain::Create(m_pGraphicDev, 1000, 1000, 10)));
-
-	ENGINE::CComponent_Manager::GetInstance()->Ready_AllMesh(m_pGraphicDev, L"../Data/MeshImagePath.txt");
+	GET_INSTANCE(ENGINE::CComponent_Manager)->Ready_AllTexture(m_pGraphicDev, L"../Data/ImagePath.txt");
+	GET_INSTANCE(ENGINE::CComponent_Manager)->Ready_AllMesh(m_pGraphicDev, L"../Data/MeshImagePath.txt");
 
 	return S_OK;
 }
