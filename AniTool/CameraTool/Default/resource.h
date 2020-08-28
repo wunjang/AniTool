@@ -9,11 +9,13 @@
 #define IDD_MYFORM                      310
 #define IDD_EVENTCAMTOOL                313
 #define IDD_MAPSELECTIONTOOL            314
+#define IDD_SAMPLETARGETANIMATIONTOOL   315
 #define IDC_TAB1                        1000
 #define IDC_PLAYBARTEXT                 1024
 #define IDC_BUTTON1                     1026
 #define IDC_FILESAVE                    1026
 #define IDC_LOADMAPDATA                 1026
+#define IDC_SAMPLETARGETANIMATIONPLAY   1026
 #define IDC_FILELOAD                    1027
 #define IDC_CAMERAACTION_LIST           1038
 #define IDC_CAMERACATION_REMOVE         1039
@@ -68,14 +70,18 @@
 #define IDC_CLEARSMOOTH                 1085
 #define IDC_TARGETSCALE                 1086
 #define IDC_ESCAPESTOP                  1087
+#define IDC_SAMPLETARGETANIMATIONLIST   1088
+#define IDC_TARGETANIMATION             1089
+#define IDC_EDIT1                       1090
+#define IDC_ANISPEED                    1090
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        315
+#define _APS_NEXT_RESOURCE_VALUE        316
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1088
-#define _APS_NEXT_SYMED_VALUE           315
+#define _APS_NEXT_CONTROL_VALUE         1091
+#define _APS_NEXT_SYMED_VALUE           316
 #endif
 #endif

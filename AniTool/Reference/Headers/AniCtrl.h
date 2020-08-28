@@ -22,7 +22,7 @@ public:
 	HRESULT			Ready_AniCtrl(void);
 
 	void			Set_AnimationSet(const _uint& iIndex);
-	void			Set_CompulsoryAniSet(const _uint& iIndex);
+	void			Set_CoreciveAniSet(const _uint& iIndex);
 
 	void			Play_AnimationSet(const _float& fTimeDelta);
 
@@ -32,6 +32,7 @@ public:
 	void			Set_Weight(_float fWeight)		{ m_fCurWeight = fWeight; m_fNextWeight = 1.f - fWeight; }
 	void			Set_CurWeight(_float fWeight)	{ m_fCurWeight = fWeight;}
 	void			Set_NextWeight(_float fWeight)	{ m_fNextWeight = fWeight; }
+	void SetTrackPosition(_double dbPosition);
 private:
 	LPD3DXANIMATIONCONTROLLER		m_pAniCtrl;
 	_uint							m_iCurrentTrack;

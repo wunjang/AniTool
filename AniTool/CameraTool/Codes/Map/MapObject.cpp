@@ -24,40 +24,48 @@ HRESULT CMapObject::Initialize(ENGINE::_WorldInfo tInfo, const wstring wstrResou
 
 _int CMapObject::Update(const _float & fTimeDelta)
 {
-	CGameObject::Update(fTimeDelta);
+	
 
-	return ENGINE::NO_EVENT;
+	return CGameObject::Update(fTimeDelta);
 }
 
 _int CMapObject::LateUpdate(const _float & fTimeDelta)
 {
-	CGameObject::LateUpdate(fTimeDelta);
+	
 	ENGINE::Get_Renderer()->Add_RenderGroup(ENGINE::RENDER_NONALPHA, this);
 
-	return ENGINE::NO_EVENT;
+	return CGameObject::LateUpdate(fTimeDelta);
 }
 
-void CMapObject::Render(const _float & fTimeDelta)
+void CMapObject::Render(const _float& fTimeDelta, ENGINE::SUBSET::RENDER eRenderSel)
 {
 	ENGINE::CShader* pShader = ENGINE::Get_Shader(ENGINE::CShaderMgr::ShaderType_Mesh);
 
 	LPD3DXEFFECT pEffect = pShader->Get_EffectHandle();
 
-	pEffect->SetMatrix("g_matWorld", m_pTransformCom->Get_WorldMatrix());
-	pEffect->SetMatrix("g_matView", &GET_INSTANCE(CCameraMgr)->Get_View());
-	pEffect->SetMatrix("g_matProj", &GET_INSTANCE(CCameraMgr)->Get_Proj());
+	m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, true);
+	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, true);
+
+	_matrix matWorld, matView, matProj;
+	matWorld = *m_pTransformCom->Get_WorldMatrix();
+	matView = GET_INSTANCE(CCameraMgr)->Get_View();
+	matProj = GET_INSTANCE(CCameraMgr)->Get_Proj();
+
+	pEffect->SetMatrix("g_matWorld", &matWorld);
+	pEffect->SetMatrix("g_matView", &matView);
+	pEffect->SetMatrix("g_matProj", &matProj);
 
 	_uint iPassMax = 0;
 	pEffect->Begin(&iPassMax, 0);
 	pEffect->BeginPass(0);
 
-	m_pMesh->Render_Meshes(pEffect);
+	m_pMesh->Render_Meshes(pEffect, eRenderSel);
 
 	pEffect->EndPass();
 	pEffect->End();
 }
 
-void CMapObject::Render_PostProcess(const _float & fTimeDelta)
+void CMapObject::Render_PostProcess(const _float & fTimeDelta, ENGINE::SUBSET::RENDER eRenderSel)
 {
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, true);
 	LPD3DXEFFECT pEffect = ENGINE::Get_Shader(ENGINE::CShaderMgr::ShaderType::ShaderType_Mesh)->Get_EffectHandle();
@@ -81,6 +89,7 @@ void CMapObject::Render_PostProcess(const _float & fTimeDelta)
 HRESULT CMapObject::Add_Component(const wstring wstrResourseName)
 {
 	ENGINE::CComponent*		pComponent = nullptr;
+
 
 	// For.Com_Mesh
 	FAILED_CHECK_RETURN(ENGINE::CGameObject::Add_Component(0, wstrResourseName, ENGINE::COMPONENT::TAG_MESH, (ENGINE::CComponent**)&m_pMesh), E_FAIL);

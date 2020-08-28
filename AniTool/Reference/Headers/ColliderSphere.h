@@ -14,25 +14,22 @@ private:
 	virtual ~CColliderSphere(void);
 
 public:
-	_float*				Get_Radius(void) { return &m_fRadius; }
-	void				Set_Radius(_float fRadius);
-	_vec3*				Get_Pos(void) { return &m_vPos; }
-	void				Set_Pos(_vec3 vPos) { m_vPos = vPos; }
+
 	void				Change_SphereRadius(_float fRadius);
-	
+	void				Set_Radius(_float fRadius);
 public:
-	HRESULT				 Ready_Collider(const _matrix * pTargetBoneMatrix, const _matrix * pTargetWorldMatrix, _float fRadius, _vec3 vPos);
-	virtual void	Render();
-private:
-	_float		m_fRadius;
-	_vec3		m_vPos;
+	HRESULT				Ready_Collider(const _matrix * pTargetBoneMatrix, const _matrix * pTargetWorldMatrix, _float fRadius, _vec3 vPos,_vec3* vScale);
+	virtual void		Render(LPD3DXEFFECT & pEffect, _matrix matView, _matrix matProj);
+
+
 
 public:
 	static CColliderSphere*	Create(LPDIRECT3DDEVICE9 pGraphicDev,
 		const _matrix * m_pTargetBoneMatrix,
 		const _matrix * m_pTargetWorldMatrix,
 		_float fRadius,
-		_vec3 vPos);
+		_vec3 vPos,
+		_vec3* vScale = nullptr);
 
 
 

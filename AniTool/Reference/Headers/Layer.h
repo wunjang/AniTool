@@ -33,11 +33,15 @@ public:
 
 
 	HRESULT				Ready_Layer(void);
+	HRESULT				LateInitialize(void);
+
 	_int				Update_Layer(const _float& fTimeDelta);
 	_int				LateUpdate_Scene(const _float& fTimeDelta);
+
+	HRESULT				Export(OBJ_ID eID, CGameObject* pObj);
 private:
 	typedef list<CGameObject*>					OBJECT_LIST;
-	typedef unordered_map<OBJ_ID, OBJECT_LIST>	MAP_OBJECT;
+	typedef map<OBJ_ID, OBJECT_LIST>	MAP_OBJECT;
 	MAP_OBJECT	m_GameObjects;
 
 public:

@@ -57,7 +57,7 @@ _int CCameraPath::Update(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CCameraPath::Render(const _float & fTimeDelta)
+void CCameraPath::Render(const _float & fTimeDelta, ENGINE::SUBSET::RENDER eRenderSel)
 {
 	_matrix matWorld;
 	D3DXMatrixIdentity(&matWorld);

@@ -28,9 +28,6 @@
     <Filter Include="02. Tools">
       <UniqueIdentifier>{aa070fc3-0991-4dad-ae37-53e9146da55b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. Tools\00. AnimationTool">
-      <UniqueIdentifier>{4331afd0-ba1c-41c7-943e-02bb69ae4b92}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03. Scene">
       <UniqueIdentifier>{b2720c27-cb23-41a6-92fa-a5bd368b27be}</UniqueIdentifier>
     </Filter>
@@ -69,6 +66,12 @@
     </Filter>
     <Filter Include="05. Function">
       <UniqueIdentifier>{bb238bcc-f256-45f9-a44a-4d2659e19329}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Tools\00. EventCameraTool">
+      <UniqueIdentifier>{4331afd0-ba1c-41c7-943e-02bb69ae4b92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Tools\00. EventCameraTool\00. SampleTargetAnimationSet">
+      <UniqueIdentifier>{6e4191c5-618c-43a2-bb12-7637f6f38b8a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -118,7 +121,7 @@
       <Filter>00. MFC\03. Doc</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\EventCamTool.h">
-      <Filter>02. Tools\00. AnimationTool</Filter>
+      <Filter>02. Tools\00. EventCameraTool</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\FreeCamera.h">
       <Filter>04. GameObject\00. Camera\00. FreeCam</Filter>
@@ -147,6 +150,9 @@
     <ClInclude Include="..\Codes\Function.h">
       <Filter>05. Function</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\SampleTargetAnimationTool.h">
+      <Filter>02. Tools\00. EventCameraTool\00. SampleTargetAnimationSet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Codes\MainFrm.cpp">
@@ -174,7 +180,7 @@
       <Filter>00. MFC\03. Doc</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\EventCamTool.cpp">
-      <Filter>02. Tools\00. AnimationTool</Filter>
+      <Filter>02. Tools\00. EventCameraTool</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\FreeCamera.cpp">
       <Filter>04. GameObject\00. Camera\00. FreeCam</Filter>
@@ -202,6 +208,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Function.cpp">
       <Filter>05. Function</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\SampleTargetAnimationTool.cpp">
+      <Filter>02. Tools\00. EventCameraTool\00. SampleTargetAnimationSet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

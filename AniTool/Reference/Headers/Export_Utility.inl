@@ -12,6 +12,11 @@ ENGINE::CComponent*		Get_Component(
 	return CManagement::GetInstance()->Get_Component(eType, eObjectID, eComponentTag, eID);
 }
 
+inline CScene * Get_Scene()
+{
+	return CManagement::GetInstance()->Get_Scene();
+}
+
 ENGINE::CGameObject * Get_GameObject(
 	ENGINE::LAYER_TYPE eType,
 	const  OBJ_ID eObjectID,
@@ -39,7 +44,6 @@ HRESULT	Create_Management(LPDIRECT3DDEVICE9 pGraphicDev, CManagement** ppManagem
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	FAILED_CHECK_RETURN(pManagement->Ready_Shader(pGraphicDev), E_FAIL);
 	*ppManagement = pManagement;
 
 	return S_OK;
@@ -49,10 +53,21 @@ inline HRESULT Add_GameObject(LAYER_TYPE eLayerType, const  OBJ_ID eObjectID, CG
 {
 	return CManagement::GetInstance()->Add_GameObject(eLayerType, eObjectID, pObject);
 }
-inline HRESULT LateAdd_GameObject(LAYER_TYPE eLayerType, const  OBJ_ID eObjectID, CGameObject * pObject)
+
+inline HRESULT LateInitialize()
 {
-	return CManagement::GetInstance()->LateAdd_GameObject(eLayerType, eObjectID, pObject);
+	return CManagement::GetInstance()->LateInitialize();
 }
+
+inline HRESULT Release_Scene()
+{
+	return CManagement::GetInstance()->Release_Scene();
+}
+
+
+
+
+
 // Renderer
 // Get
 // Set
@@ -65,6 +80,11 @@ CRenderer*		Get_Renderer(void)
 inline void Set_DebugBuffer_Switch()
 {
 	CRenderer::GetInstance()->Set_DebugBuffer_Switch();
+}
+
+inline void ResetMeshConstant()
+{
+	ENGINE::CRenderer::GetInstance()->ResetMeshConstant();
 }
 
 inline const D3DLIGHT9 * Get_Light(const _uint & iIndex)
@@ -97,6 +117,12 @@ inline void Update_Light(const _float & fTimeDelta)
 inline void ResetLight()
 {
 	CLightMgr::GetInstance()->ResetLight();
+
+}
+
+inline void Set_GodRay_Focus(_vec3 vPos)
+{
+	CLightMgr::GetInstance()->Set_GodRay_Focus(vPos);
 
 }
 
@@ -181,9 +207,9 @@ HRESULT Ready_MRT(MRTTag eMRTTag, RenderTargetTag eTargetTag)
 {
 	return CRenderTargetMgr::GetInstance()->Ready_MRT(eMRTTag, eTargetTag);
 }
-inline HRESULT Clear_RenderTarget(RenderTargetTag eTargetTag)
+inline HRESULT Clear_RenderTarget(RenderTargetTag eTargetTag, _bool bCheckClearZBuffer)
 {
-	return CRenderTargetMgr::GetInstance()->Clear_RenderTarget(eTargetTag);
+	return CRenderTargetMgr::GetInstance()->Clear_RenderTarget(eTargetTag, bCheckClearZBuffer);
 }
 HRESULT Begin_MRT(MRTTag eMRTTag)
 {
@@ -228,6 +254,12 @@ inline CRenderTarget*	Find_RenderTarget(RenderTargetTag eTargetTag)
 	;
 }
 
+inline void Copy_RenderTarget(RenderTargetTag eDst, RenderTargetTag eSrc, LPD3DXEFFECT & pEffect)
+{
+	CRenderTargetMgr::GetInstance()->Copy_RenderTarget(eDst,eSrc,pEffect);
+
+}
+
 inline HRESULT InItManager(LPDIRECT3DDEVICE9 & pGraphicDev)
 {
 	CRenderer::GetInstance()->Ready_Renderer(pGraphicDev);
@@ -260,20 +292,26 @@ _ulong		Check_Loading()
 // Release Utility
 void		Release_Utility(void)
 {
-	CEffectMgr::GetInstance()->DestroyInstance();
+	CFogMgr::GetInstance()->DestroyInstance();
 	CResourceLoader::GetInstance()->DestroyInstance();
 	CShaderMgr::GetInstance()->DestroyInstance();
 	CRenderTargetMgr::GetInstance()->DestroyInstance();
 	CLightMgr::GetInstance()->DestroyInstance();
-	CRenderer::GetInstance()->DestroyInstance();
 
 	CManagement::GetInstance()->DestroyInstance();
+	CEffectMgr::GetInstance()->DestroyInstance();
 	CComponent_Manager::GetInstance()->DestroyInstance();
+	//CRenderer::GetInstance()->DestroyInstance();
 }
 
-inline void UseParticle(_vec3 vPos, PARTICLE_EFFECT_INFO tInfo, TEX_EFFECT_INFO tTexInfo, _float fUseTime, _bool bUseBloom, _int iMaxParticle, _matrix * pParent)
+inline CEffectParticle* UseParticle(CEffectParticle** ppParticle,_vec3 vPos, _vec3 vScale, _vec3 vAngle, PARTICLE_EFFECT_INFO tInfo, TEX_EFFECT_INFO tTexInfo, _float fUseTime, _bool bUseBloom, _int iMaxParticle, _matrix * pParent, _bool bParentPosOnly )
 {
-	CEffectMgr::GetInstance()->UseParticle(vPos, tInfo, tTexInfo, fUseTime, bUseBloom, iMaxParticle, pParent);
+	return CEffectMgr::GetInstance()->UseParticle(ppParticle,vPos, vScale, vAngle, tInfo, tTexInfo, fUseTime, bUseBloom, iMaxParticle, pParent, bParentPosOnly);
+}
+
+inline CEffectParticle * UseMeshParticle(CEffectParticle ** ppParticle, _vec3 vPos, _vec3 vScale, _vec3 vAngle, PARTICLE_EFFECT_INFO tInfo, TEX_EFFECT_INFO tTexInfo, _float fUseTime, LPD3DXMESH pMesh, _int iVertexInterval, _matrix * pParent, _bool bParentPosOnly)
+{
+	return CEffectMgr::GetInstance()->UseMeshParticle(ppParticle,vPos,vScale,vAngle,tInfo,tTexInfo,fUseTime,pMesh,iVertexInterval,pParent, bParentPosOnly);
 }
 
 inline void Set_Current_ViewProj(_matrix matView, _matrix matProj)
@@ -304,5 +342,16 @@ inline HRESULT Ready_Manager(LPDIRECT3DDEVICE9 pGraphicDev)
 	//	return E_FAIL;
 	//}
 	CEffectMgr::GetInstance()->Ready_Manager(pGraphicDev);
+	CLightMgr::GetInstance()->Ready_Manager(pGraphicDev);
 	return S_OK;
+}
+
+inline void Reset_EffectManager()
+{
+	CEffectMgr::GetInstance()->Reset_EffectManager();
+}
+
+inline void Return_Particle(CEffectParticle** ppParticle)
+{
+	CEffectMgr::GetInstance()->Return_Particle(ppParticle);
 }

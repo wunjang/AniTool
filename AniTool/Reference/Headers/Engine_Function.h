@@ -21,6 +21,10 @@ namespace ENGINE
 		{
 
 			dwRefCnt = pointer->Release();
+			if (dwRefCnt > 1000)
+			{
+				int i = 0;
+			}
 			if (dwRefCnt == 0)
 				pointer = NULL;
 		}
@@ -56,6 +60,7 @@ namespace ENGINE
 			pointer = NULL;
 		}
 	}
+
 	//////////////////////////////////////////////////////////////////
 	/////////////////////////////////Functor//////////////////////////
 
@@ -63,8 +68,8 @@ namespace ENGINE
 	{
 	public:
 		explicit CTag_Finder(const _tchar* pTag)
-			: m_pTargetTag(pTag) 
-		{		
+			: m_pTargetTag(pTag)
+		{
 		}
 		~CTag_Finder() {		}
 	public:
@@ -147,7 +152,7 @@ namespace ENGINE
 	};
 
 
-
+	////////////////////////충돌용/////////////////////////////////////
 	class Collision_SphereToBox
 	{
 	public:
@@ -167,29 +172,7 @@ namespace ENGINE
 		//바운딩용 
 		_bool operator()()
 		{
-			
-			D3DXVec3TransformCoord(&m_vBoxMax, &m_vBoxMax, &m_matBoxWorld);
-			D3DXVec3TransformCoord(&m_vBoxMin, &m_vBoxMin, &m_matBoxWorld);
 
-			if (m_vSpherePos.x < m_vBoxMin.x && m_vBoxMin.x - m_vSpherePos.x > m_fSphereRadius)
-				return false;
-
-			if (m_vSpherePos.x > m_vBoxMax.x && m_vSpherePos.x - m_vBoxMax.x > m_fSphereRadius)
-				return false;
-
-			if (m_vSpherePos.y < m_vBoxMin.y && m_vBoxMin.y - m_vSpherePos.y > m_fSphereRadius)
-				return false;
-
-			if (m_vSpherePos.y > m_vBoxMax.y && m_vSpherePos.y - m_vBoxMax.y > m_fSphereRadius)
-				return false;
-
-			if (m_vSpherePos.z < m_vBoxMin.z && m_vBoxMin.z - m_vSpherePos.z > m_fSphereRadius)
-				return false;
-
-			if (m_vSpherePos.z > m_vBoxMax.z && m_vSpherePos.z - m_vBoxMax.z > m_fSphereRadius)
-				return false;
-
-			return true;
 		}
 
 		_bool operator()(const _vec3 vSpherePos, const _float fSphereRadius, const _vec3 vBoxtMin, const _vec3 vBoxMax, const _matrix matBoxWorld)
@@ -198,6 +181,13 @@ namespace ENGINE
 			_vec3 vWorldBoxMin, vWorldBoxMax;
 			_vec3 vProjSpherePos;
 			_vec3 vBoxRight, vBoxUp, vBoxLook;
+			_vec3 vCenter;
+			_matrix matWorld;
+
+
+			//vCenter = (vBoxtMin + vBoxMax) * 0.5f;
+			//D3DXMatrixTranslation(&matWorld, vCenter.x, vCenter.y, vCenter.z);
+			//matWorld *= matBoxWorld;
 
 			D3DXVec3Normalize(&vBoxRight, &_vec3(matBoxWorld.m[0]));
 			D3DXVec3Normalize(&vBoxUp, &_vec3(matBoxWorld.m[1]));
@@ -208,34 +198,14 @@ namespace ENGINE
 			D3DXVec3TransformCoord(&vWorldBoxMax, &vBoxMax, &matBoxWorld);
 			D3DXVec3TransformCoord(&vWorldBoxMin, &vBoxtMin, &matBoxWorld);
 
-			_vec3 vBoxSize = { 
-				D3DXVec3Length(&_vec3(matBoxWorld.m[0])) * (vBoxMax - vBoxtMin).x, 
-				D3DXVec3Length(&_vec3(matBoxWorld.m[1])) * (vBoxMax - vBoxtMin).y, 
+			_vec3 vBoxSize = {
+				D3DXVec3Length(&_vec3(matBoxWorld.m[0])) * (vBoxMax - vBoxtMin).x,
+				D3DXVec3Length(&_vec3(matBoxWorld.m[1])) * (vBoxMax - vBoxtMin).y,
 				D3DXVec3Length(&_vec3(matBoxWorld.m[2])) * (vBoxMax - vBoxtMin).z };
 			vBoxSize *= 0.5f;
 
 			//박스의 축에 투영
-			//vProjSpherePos = { D3DXVec3Dot(&vSpherePos,&vBoxRight),D3DXVec3Dot(&vSpherePos,&vBoxUp),D3DXVec3Dot(&vSphe3rePos,&vBoxLook) };
 			vProjSpherePos = { D3DXVec3Dot(&vSphereDir,&vBoxRight),D3DXVec3Dot(&vSphereDir,&vBoxUp),D3DXVec3Dot(&vSphereDir,&vBoxLook) };
-
-
-			//if (vProjSpherePos.x < vWorldBoxMin.x && vWorldBoxMin.x - vProjSpherePos.x > fSphereRadius)
-			//	return false;
-			//
-			//if (vProjSpherePos.x > vWorldBoxMax.x && vProjSpherePos.x - vWorldBoxMax.x > fSphereRadius)
-			//	return false;
-			//
-			//if (vProjSpherePos.y < vWorldBoxMin.y && vWorldBoxMin.y - vProjSpherePos.y > fSphereRadius)
-			//	return false;
-			//
-			//if (vProjSpherePos.y > vWorldBoxMax.y && vProjSpherePos.y - vWorldBoxMax.y > fSphereRadius)
-			//	return false;
-			//
-			//if (vProjSpherePos.z < vWorldBoxMin.z && vWorldBoxMin.z - vProjSpherePos.z > fSphereRadius)
-			//	return false;
-			//
-			//if (vProjSpherePos.z > vWorldBoxMax.z && vProjSpherePos.z - vWorldBoxMax.z > fSphereRadius)
-			//	return false;
 
 			if (D3DXVec3Length(&vProjSpherePos) > D3DXVec3Length(&vBoxSize) + fSphereRadius)
 				return false;
@@ -258,6 +228,13 @@ namespace ENGINE
 	{
 		typedef	struct tagOBB
 		{
+			tagOBB()
+			{
+				ZeroMemory(vPoint, sizeof(_vec3) * 8);
+				ZeroMemory(vCenter, sizeof(_vec3));
+				ZeroMemory(vProjAxis, sizeof(_vec3) * 3);
+				ZeroMemory(vAxis, sizeof(_vec3) * 3);
+			}
 			_vec3		vPoint[8];
 			_vec3		vCenter;
 			_vec3		vProjAxis[3];	// 객체 당 세 개의 면을 향해 뻗어나가는 벡터
@@ -268,8 +245,8 @@ namespace ENGINE
 		explicit Collision_Box()
 		{
 		}
-		explicit Collision_Box(_vec3& vDestMin, _vec3& vDestMax,  _matrix& matDestWorld,
-								_vec3& vSourMin, _vec3& vSourMax, _matrix& matSourWorld)
+		explicit Collision_Box(_vec3& vDestMin, _vec3& vDestMax, _matrix& matDestWorld,
+			_vec3& vSourMin, _vec3& vSourMax, _matrix& matSourWorld)
 			: m_vSrcMin(vSourMin)
 			, m_vSrcMax(vSourMax)
 			, m_vDstMin(vDestMin)
@@ -480,12 +457,12 @@ namespace ENGINE
 	};
 
 
-	/////////////////////////////////////////////////////////
+	//////////////////////개발용///////////////////////////////////
 	class CAngleInTwoDir
 	{
-		
+
 	public:
-		explicit CAngleInTwoDir(_float* pOutAngle, _vec3 vStdDir, _vec3 vCmpDir, AXIS eExcpetAxis,_bool bIsWanaaDegree=true)
+		explicit CAngleInTwoDir(_float* pOutAngle, _vec3 vStdDir, _vec3 vCmpDir, AXIS eExcpetAxis, _bool bIsWanaaDegree = true)
 			: m_pOutAngle(pOutAngle)
 			, m_vStdDir(vStdDir)
 			, m_vCmpDir(vCmpDir)
@@ -573,7 +550,7 @@ namespace ENGINE
 			}
 		}
 
-		_bool operator()(_float* pOutAngle, _vec3 vStdDir, _vec3 vCmpDir, AXIS eExcpetAxis,_bool bIsWannaDegree = true)
+		_bool operator()(_float* pOutAngle, _vec3 vStdDir, _vec3 vCmpDir, AXIS eExcpetAxis, _bool bIsWannaDegree = true)
 		{
 			_vec3 vOut, vStd, vCmp;
 
@@ -682,8 +659,17 @@ namespace ENGINE
 	class CAngleInWorldAxis
 	{
 	public:
+		explicit CAngleInWorldAxis()
+			: m_vDir(0.f, 0.f, 0.f)
+		{
+		}
+
 		explicit CAngleInWorldAxis(_vec3* vDir)
-			: m_pDir(vDir)
+			: m_vDir(*vDir)
+		{
+		}
+		explicit CAngleInWorldAxis(const _vec3* vDir)
+			:m_vDir(*vDir)
 		{
 		}
 		~CAngleInWorldAxis(void) {}
@@ -691,7 +677,7 @@ namespace ENGINE
 		_vec3 operator()()
 		{
 			// 이 함수는 공간상의 벡터를 x각도 -90 ~ 90, y각도 -180~180, z각도 0으로 표현한다
-			_vec3 vNor = *D3DXVec3Normalize(&vNor, m_pDir);
+			_vec3 vNor = *D3DXVec3Normalize(&vNor, &m_vDir);
 			_vec3 vAngle = {};
 
 			vAngle.y = atan2f(vNor.x, vNor.z);
@@ -713,7 +699,7 @@ namespace ENGINE
 			return _vec3(-D3DXToDegree(vAngle.x), D3DXToDegree(vAngle.y), 0.f);
 		}
 	private:
-		_vec3*	m_pDir;
+		_vec3	m_vDir;
 
 	};
 
@@ -722,12 +708,12 @@ namespace ENGINE
 	{
 	public:
 		explicit CParabola3D()
-			: m_vInitPos(0.f,0.f,0.f)
+			: m_vInitPos(0.f, 0.f, 0.f)
 			, m_vInitSpeed(0.f, 0.f, 0.f)
 			, m_fStoreTime(0.f)
 		{
 		}
-		explicit CParabola3D(_vec3 vInitPos,_vec3 vInitSpeed, _float fStoreTime)
+		explicit CParabola3D(_vec3 vInitPos, _vec3 vInitSpeed, _float fStoreTime)
 			: m_vInitPos(vInitPos)
 			, m_vInitSpeed(vInitSpeed)
 			, m_fStoreTime(fStoreTime)
@@ -749,7 +735,7 @@ namespace ENGINE
 			vOutPos.x = m_vInitSpeed.x*m_fStoreTime + m_vInitPos.x;
 			vOutPos.y = -(0.5f*fGravity*(m_fStoreTime*m_fStoreTime)) + m_vInitSpeed.y*m_fStoreTime + m_vInitPos.y;
 			vOutPos.z = m_vInitSpeed.z*m_fStoreTime + m_vInitPos.z;
-				
+
 			return vOutPos;
 		}
 	private:
@@ -799,14 +785,173 @@ namespace ENGINE
 		_vec3	m_vPlaneNormal;
 	};
 
+	class CFrustrum
+	{
+	public:
+		enum CULLDIST { FAR_NORMAL, FAR_HALF, FAR_QUATER };
+		explicit CFrustrum()
+		{
+			ZeroMemory(m_vPoint, sizeof(_vec3) * 8);
+			ZeroMemory(m_Plane, sizeof(D3DXPLANE) * 6);
+		}
 
+
+		HRESULT	Set_Point()
+		{
+			m_vPoint[0] = _vec3(-1.f, 1.f, 0.f);
+			m_vPoint[1] = _vec3(1.f, 1.f, 0.f);
+			m_vPoint[2] = _vec3(1.f, -1.f, 0.f);
+			m_vPoint[3] = _vec3(-1.f, -1.f, 0.f);
+
+			m_vPoint[4] = _vec3(-1.f, 1.f, 1.f);
+			m_vPoint[5] = _vec3(1.f, 1.f, 1.f);
+			m_vPoint[6] = _vec3(1.f, -1.f, 1.f);
+			m_vPoint[7] = _vec3(-1.f, -1.f, 1.f);
+
+			m_vHalfFar[0] = m_vPoint[7];
+			m_vHalfFar[1] = m_vPoint[6];
+			m_vHalfFar[2] = m_vPoint[5];
+
+			m_vQaurterFar[0] = m_vPoint[7];
+			m_vQaurterFar[1] = m_vPoint[6];
+			m_vQaurterFar[2] = m_vPoint[5];
+
+			return S_OK;
+		}
+		HRESULT	Set_Plane(_matrix matView, _matrix matProj)
+		{
+			_matrix		matInvProj, matInvView, matHalfInvView, matQaurterInvView;
+			_vec3		vAdjPoint[3];
+			Set_Point();
+
+
+			matHalfInvView = matView;
+			matQaurterInvView = matView;
+
+
+			D3DXMatrixInverse(&matInvView, NULL, &matView);
+			D3DXMatrixInverse(&matInvProj, NULL, &matProj);
+
+			matQaurterInvView = matInvProj;
+			matQaurterInvView._44 *= 10.f;
+			matQaurterInvView._34 *= 10.f;
+
+			matHalfInvView = matInvProj;
+			matHalfInvView._44 *= 10.f;
+			matHalfInvView._34 *= 10.f;
+
+			//matQaurterInvView = matInvProj;
+
+			for (_uint i = 0; i < 8; ++i)
+			{
+				D3DXVec3TransformCoord(&m_vPoint[i], &m_vPoint[i], &matInvProj);
+				D3DXVec3TransformCoord(&m_vPoint[i], &m_vPoint[i], &matInvView);
+			}
+
+			for (_uint i = 0; i < 3; ++i)
+			{
+				D3DXVec3TransformCoord(&m_vHalfFar[i], &m_vHalfFar[i], &matHalfInvView);
+				D3DXVec3TransformCoord(&m_vHalfFar[i], &m_vHalfFar[i], &matInvView);
+
+				D3DXVec3TransformCoord(&m_vQaurterFar[i], &m_vQaurterFar[i], &matQaurterInvView);
+				D3DXVec3TransformCoord(&m_vQaurterFar[i], &m_vQaurterFar[i], &matInvView);
+			}
+
+			//////////////////////////////////////Near - Far까지 ///////////////////////
+			// +x
+			D3DXPlaneFromPoints(&m_Plane[0], &m_vPoint[1], &m_vPoint[5], &m_vPoint[6]);
+
+			// -x
+			D3DXPlaneFromPoints(&m_Plane[1], &m_vPoint[4], &m_vPoint[0], &m_vPoint[3]);
+
+			// +y
+			D3DXPlaneFromPoints(&m_Plane[2], &m_vPoint[4], &m_vPoint[5], &m_vPoint[1]);
+
+			// -y
+			D3DXPlaneFromPoints(&m_Plane[3], &m_vPoint[3], &m_vPoint[2], &m_vPoint[6]);
+
+			// -z
+			D3DXPlaneFromPoints(&m_Plane[4], &m_vPoint[0], &m_vPoint[1], &m_vPoint[2]);
+
+			// +z
+			D3DXPlaneFromPoints(&m_Plane[5], &m_vPoint[7], &m_vPoint[6], &m_vPoint[5]);
+
+			// +z Half
+
+			D3DXPlaneFromPoints(&m_PlaneHalf, &m_vHalfFar[0], &m_vHalfFar[1], &m_vHalfFar[2]);
+
+			// +z Quarter
+			D3DXPlaneFromPoints(&m_PlaneQuarter, &m_vQaurterFar[0], &m_vQaurterFar[1], &m_vQaurterFar[2]);
+
+			return S_OK;
+		}
+
+		_bool IsIn_Frustum(const _vec3* pPos, const _float& fRadius, CULLDIST eDist)
+		{
+			_float		fDistance = 0.f;
+
+			if (eDist == FAR_NORMAL)
+			{
+				for (_uint i = 0; i < 6; ++i)
+				{
+					fDistance = D3DXPlaneDotCoord(&m_Plane[i], pPos);
+					if (fDistance > fRadius)
+						return false;
+				}
+			}
+			else if (eDist == FAR_HALF)
+			{
+				for (_uint i = 0; i < 5; ++i)
+				{
+					fDistance = D3DXPlaneDotCoord(&m_Plane[i], pPos);
+
+					if (fDistance > fRadius)
+						return false;
+				}
+				fDistance = D3DXPlaneDotCoord(&m_PlaneHalf, pPos);
+				if (fDistance > fRadius)
+					return false;
+			}
+			else if (eDist == FAR_QUATER)
+			{
+				for (_uint i = 0; i < 5; ++i)
+				{
+					fDistance = D3DXPlaneDotCoord(&m_Plane[i], pPos);
+					if (fDistance > fRadius)
+						return false;
+				}
+				fDistance = D3DXPlaneDotCoord(&m_PlaneQuarter, pPos);
+				if (fDistance > fRadius)
+					return false;
+			}
+
+
+			return true;
+		}
+
+		_bool IsIn_Frustum_ForObject(const _vec3* pPosWorld, const _float& fRadius = 0.f, CULLDIST eDist = FAR_NORMAL)
+		{
+			return IsIn_Frustum(pPosWorld, fRadius, eDist);
+		}
+	private:
+		_vec3					m_vPoint[8];
+		_vec3					m_vHalfFar[3];
+		_vec3					m_vQaurterFar[3];
+
+		D3DXPLANE				m_Plane[6];
+		D3DXPLANE				m_PlaneHalf;
+		D3DXPLANE				m_PlaneQuarter;
+	};
+
+
+	//////////////////////최적화용////////////////////////////
 
 
 
 	class CCalc
 	{
 	public:
-		explicit CCalc(){}
+		explicit CCalc() {}
 		~CCalc(void) {}
 	public:
 		_bool operator()(Collision_Sphere &Functor)
@@ -828,7 +973,7 @@ namespace ENGINE
 
 		_vec3 operator()(CAngleInWorldAxis &Functor)
 		{
-			
+
 			return Functor();
 		}
 		_vec3 operator()(CRotatedDir &Functor)
@@ -880,7 +1025,7 @@ namespace ENGINE
 			if (fMin >= fMax)
 				return fMin;
 
-			float f = (rand() % 10000)*0.0001f;
+			_float f = (rand() % 10000)*0.0001f;
 			return (f*(fMax - fMin)) + fMin;
 		}
 		static D3DXVECTOR3 GetRandomVector(D3DXVECTOR3 vMin, D3DXVECTOR3 vMax)
@@ -902,9 +1047,9 @@ namespace ENGINE
 
 			return vVector;
 		}
-		static float GetMaximumValue(float pArray[], DWORD dwMaxIndex, DWORD* pIndex = nullptr)
+		static _float GetMaximumValue(_float pArray[], DWORD dwMaxIndex, DWORD* pIndex = nullptr)
 		{
-			float fMaxValue = 0.f;
+			_float fMaxValue = 0.f;
 			for (DWORD dwIndex = 0; dwIndex < dwMaxIndex; ++dwIndex)
 			{
 				if (pArray[dwIndex] > fMaxValue)
@@ -916,9 +1061,9 @@ namespace ENGINE
 			}
 			return fMaxValue;
 		}
-		static float GetMinimumValue(float pArray[], DWORD dwMaxIndex, DWORD* pIndex = nullptr)
+		static _float GetMinimumValue(_float pArray[], DWORD dwMaxIndex, DWORD* pIndex = nullptr)
 		{
-			float fMinValue = 99999.f;
+			_float fMinValue = 99999.f;
 			for (DWORD dwIndex = 0; dwIndex < dwMaxIndex; ++dwIndex)
 			{
 				if (pArray[dwIndex] < fMinValue)
@@ -929,6 +1074,55 @@ namespace ENGINE
 				}
 			}
 			return fMinValue;
+		}
+
+		static _float Clamp(_float fVelue,_float fMin, _float fMax)
+		{
+			if (fVelue > fMax)
+				fVelue = fMax;
+			if (fVelue < fMin)
+				fVelue = fMin;
+			return fVelue;
+		}
+
+		static _vec3 Clamp(_vec3 vVelue, _vec3 vMin, _vec3 vMax)
+		{
+			vVelue.x = Clamp(vVelue.x, vMin.x, vMax.x);
+			vVelue.y = Clamp(vVelue.y, vMin.y, vMax.y);
+			vVelue.z = Clamp(vVelue.z, vMin.z, vMax.z);
+			return vVelue;
+		}
+		static _vec2 Clamp(_vec2 vVelue, _vec2 vMin, _vec2 vMax)
+		{
+			vVelue.x = Clamp(vVelue.x, vMin.x, vMax.x);
+			vVelue.y = Clamp(vVelue.y, vMin.y, vMax.y);
+			return vVelue;
+		}
+
+		///////////////////////////////////////////////////
+	
+		static _int Collision_Plane_To_Sphere(_vec3* pOut, D3DXPLANE tPlane,_vec3 vPlaneNormal,_vec3 vSphereCenter,_float fSphereRadius)
+		{
+			_float fDist = D3DXVec3Dot(&vSphereCenter, &vPlaneNormal) + tPlane.d;
+		
+				*pOut = vPlaneNormal * fDist;
+			if (fabsf(fDist) < fSphereRadius)
+			{
+		
+			}
+			else
+			{
+				*pOut = {0.f,0.f,0.f};
+				//평면보다 위에 있다
+				if (fDist > fSphereRadius)
+					return Plane_On;
+		
+				//평면보다 아래에 있다
+				if (fDist < fSphereRadius)
+					return Plane_Under;
+			}
+		//평면과 겹쳐있다
+			return Plane_Cross;
 		}
 	};
 }

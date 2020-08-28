@@ -12,10 +12,10 @@
 #include "ParticleBuffer.h"
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Cube.h"
+#include "VIBuffer_Circle.h"
 #include "VIBuffer_Terrain.h"
 #include "DynamicMesh.h"
 #include "StaticMesh.h"
-#include "NaviMesh.h"
 
 BEGIN(ENGINE)
 
@@ -32,6 +32,7 @@ public:
 						_uint iSceneID,
 						const wstring wstrPrototypeTag,
 						wstring wstrPath,
+						TEXTURE::TYPE tTexType = TEXTURE::TYPE::TYPE_GENERAL,
 						const _uint& iCnt = 1);
 	CComponent* Clone_Component(_uint iSceneID, const wstring wstrPrototypeTag, void* pArg);
 	HRESULT Clear_Component_Manager(_uint iSceneID);
@@ -43,8 +44,10 @@ public:
 		MESHTYPE eType,
 		wstring wstrFilePath,
 		wstring wstrFileName);
+
 	HRESULT		Ready_AllMesh(LPDIRECT3DDEVICE9 pGraphicDev, wstring wstrPath);
 	HRESULT		Ready_AllTexture(LPDIRECT3DDEVICE9 pGraphicDev, wstring wstrPath);
+	HRESULT		Ready_AllCubeTexture(LPDIRECT3DDEVICE9 pGraphicDev, wstring wstrPath);
 private:
 	_uint		m_iNumScenes = 0;
 private:

@@ -2,6 +2,19 @@
 float4      tcLumOffsets[4];               
 float4      tcDSOffsets[9];                
 
+float2		g_vPixelSize;
+float		g_fDeltaTime = 0.f;
+float		g_fSmokeDiffuseFactor = 1.f;
+
+/////////////////////////////////////
+//GodRay
+float g_fDecay = 0.96815f;
+float g_fExposure = 0.2f;
+float g_fDensity = 0.926f;
+float g_fWeight = 0.58767f;
+int		g_iGodRayCount = 0;
+float2 g_vFocusArray[5];
+/////////////////////////////////////
 texture			g_BlendTexture;
 
 sampler BlendSampler = sampler_state
@@ -194,17 +207,24 @@ PS_OUT PS_BrightDownSample(PS_IN In)
 	PS_OUT PS_BrightPass(PS_IN In)
 	{
 		PS_OUT Out = (PS_OUT)0;
-		float4 average = { 0.0f, 0.0f, 0.0f, 0.0f };
+		float4 averageBright = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 		// load in and combine the 4 samples from the source HDR texture
 		for (int i = 0; i < 4; i++)
 		{
-			average += tex2D(BaseSampler, In.vTexUV + float2(tcDownSampleOffsets[i].x, tcDownSampleOffsets[i].y))*0.2f;
-			average += tex2D(BloomSampler, In.vTexUV + float2(tcDownSampleOffsets[i].x, tcDownSampleOffsets[i].y));
+			averageBright +=saturate(tex2D(BaseSampler, In.vTexUV + float2(tcDownSampleOffsets[i].x, tcDownSampleOffsets[i].y)));
 		}
+		averageBright *= 0.25f;
+		float luminance = max(averageBright.r, max(averageBright.g, averageBright.b));
+		if (luminance < fBrightPassThreshold)
+			averageBright = float4(0.0f, 0.0f, 0.0f, 1.0f);
 
-		average *= 0.25f;
-
+		float4 averageGlow = { 0.0f, 0.0f, 0.0f, 0.0f };
+		for (int i = 0; i < 4; i++)
+		{
+			averageGlow += tex2D(BloomSampler, In.vTexUV + float2(tcDownSampleOffsets[i].x, tcDownSampleOffsets[i].y));
+		}
+		averageGlow *= 0.25f;
 		// Determine the brightness of this particular pixel. As with the luminance calculations
 		// there are 4 possible variations on this calculation:
 
@@ -216,7 +236,6 @@ PS_OUT PS_BrightDownSample(PS_IN In)
 
 		// 3. Take the maximum value of the incoming, same as computing the
 		//    brightness/value for an HSV/HSB conversion:
-		float luminance = max(average.r, max(average.g, average.b));
 
 		// 4. Compute the luminance component as per the HSL colour space:
 		//float luminance = 0.5f * ( max( average.r, max( average.g, average.b ) ) + min( average.r, min( average.g, average.b ) ) );
@@ -225,9 +244,7 @@ PS_OUT PS_BrightDownSample(PS_IN In)
 		//float luminance = length( average.rgb );
 
 		// Determine whether this pixel passes the test...
-		if (luminance < fBrightPassThreshold)
-			average = float4(0.0f, 0.0f, 0.0f, 1.0f);
-		Out.vColor = average/2.f;
+		Out.vColor = averageBright + averageGlow;
 		// Write the colour to the bright-pass render target
 		return Out;
 	}
@@ -277,6 +294,131 @@ technique Blur
 		pixelshader = compile ps_3_0 PS_VerticalBlur();
 	}
 }
+
+PS_OUT PS_ComputeSmoke(PS_IN In)
+	{
+		PS_OUT Out = (PS_OUT)0;
+
+		Out.vColor = tex2D(BaseSampler, In.vTexUV);
+
+		float4 vRight	= tex2D(BaseSampler, float2(In.vTexUV.x + g_vPixelSize.x, In.vTexUV.y));
+		float4 vLeft	= tex2D(BaseSampler, float2(In.vTexUV.x - g_vPixelSize.x, In.vTexUV.y));
+		float4 vUp		= tex2D(BaseSampler, float2(In.vTexUV.x, In.vTexUV.y + g_vPixelSize.y));
+		float4 vDown	= tex2D(BaseSampler, float2(In.vTexUV.x, In.vTexUV.y - g_vPixelSize.y));
+
+		//Out.vColor.rgb += g_fSmokeDiffuseFactor * g_fDeltaTime * 
+		//	(
+		//		vRight.rgb +
+		//		vLeft.rgb +
+		//		vUp.rgb +
+		//		vDown.rgb -
+		//		4.f * Out.vColor.rgb
+		//	);
+
+		float fFactor = g_fSmokeDiffuseFactor * g_fDeltaTime * (vRight.r + vLeft.r + vUp.r + vDown.r - 4.f * Out.vColor.r);
+		float minimum = 0.003;
+		if (fFactor >= -minimum && fFactor < 0.0) fFactor = -minimum;
+
+		Out.vColor.rgb += fFactor;
+		return Out;
+	}
+
+technique Smoke
+{
+		pass ComputeSmoke
+	{
+		alphablendenable = true;
+		srcblend = srcalpha;
+		destblend = InvSrcAlpha;
+
+	zwriteEnable = false;
+	vertexShader = NULL;
+	pixelshader = compile ps_3_0 PS_ComputeSmoke();
+	}
+}
+PS_OUT PS_ComputeGodRay(PS_IN In)
+	{
+		//https://medium.com/community-play-3d/god-rays-whats-that-5a67f26aeac2
+
+		PS_OUT Out = (PS_OUT)0;
+
+		int NUM_SAMPLE = 120;
+		if (g_iGodRayCount == 0)
+			return Out;
+
+		for (int iFocus = 0; iFocus < g_iGodRayCount; iFocus++)
+		{
+			float2 vTex = In.vTexUV;
+			float2 vDeltaTex = vTex - g_vFocusArray[iFocus];
+			vDeltaTex *= 1.f / float(NUM_SAMPLE) * g_fDensity;
+			float fIlluminationDecay = 1.f;
+
+			float4 vColor = tex2D(BaseSampler, vTex)*0.4f;
+			for (int iSamples = 0; iSamples < NUM_SAMPLE; iSamples++)
+			{
+				vTex -= vDeltaTex;
+				float4 vSample = tex2D(BaseSampler, vTex) * 0.4f;
+				vSample *= fIlluminationDecay * g_fWeight;
+
+				vColor += vSample;
+				fIlluminationDecay *= g_fDecay;
+			}
+			Out.vColor += vColor;
+		}
+		//Out.vColor /= g_iGodRayCount;
+		return Out;
+	}
+technique GodRay
+{
+		pass Compute_GodRay
+	{
+		alphablendenable = false;
+	zwriteEnable = false;
+	vertexShader = NULL;
+	pixelshader = compile ps_3_0 PS_ComputeGodRay();
+	}
+}
+
+PS_OUT PS_MOTIONBLUR(PS_IN In)
+	{
+		PS_OUT		Out = (PS_OUT)0;
+
+		int iNumBlurSample = 10;
+
+		vector		vVelocity = tex2D(VelocitySampler, In.vTexUV);
+		vVelocity.xy *= 0.01f;
+
+		int icnt = 1;
+		float4 BColor;
+
+		Out.vColor = tex2D(BlendSampler, In.vTexUV);
+		for (int i = icnt; i < iNumBlurSample; i++)
+		{
+			BColor = tex2D(BlendSampler, In.vTexUV + vVelocity.xy * (float)i);
+
+			//if (vVelocity.a < BColor.a + 0.04f)
+			//{
+			++icnt;
+			Out.vColor += BColor;
+			//}
+		}
+
+		Out.vColor /= (float)(icnt);
+		return Out;
+	}
+technique Motion_Blur
+	{
+		pass Compute_MotionBlur
+	{
+		zwriteEnable = false;
+	alphablendenable = false;
+	srcblend = srcalpha;
+	destblend = One;
+
+	vertexShader = NULL;
+	pixelshader = compile ps_3_0 PS_MOTIONBLUR();
+	}
+	}
 //void main()
 //{
 //	//float4 c0 = Sample();

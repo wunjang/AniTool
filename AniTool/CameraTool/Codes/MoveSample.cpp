@@ -34,7 +34,7 @@ _int CMoveSample::LateUpdate(const _float & fTimeDelta)
 	return 0;
 }
 
-void CMoveSample::Render(const _float & fTimeDelta)
+void CMoveSample::Render(const _float& fTimeDelta, ENGINE::SUBSET::RENDER eRenderSel)
 {
 	
 }

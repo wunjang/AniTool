@@ -21,14 +21,15 @@ public:
 										const _uint& iHeight,
 										D3DFORMAT Format,
 										D3DXCOLOR Color,
-										CRenderTarget** ppOutputTarget = nullptr);
+										CRenderTarget** ppOutputTarget = nullptr,
+										_bool bUseDepth = false);
 	HRESULT			Ready_LuminanceTarget(LPDIRECT3DDEVICE9 pGraphicDev);
 
 
 	HRESULT			Ready_MRT(MRTTag eMRTTag, RenderTargetTag eTargetTag);
 
 	HRESULT			Begin_MRT(MRTTag eMRTTag);
-	HRESULT			Clear_RenderTarget(RenderTargetTag eTargetTag);
+	HRESULT			Clear_RenderTarget(RenderTargetTag eTargetTag, _bool bCheckClearZBuffer);
 	HRESULT			End_MRT(MRTTag eMRTTag);
 
 	HRESULT			Ready_DebugBuffer(RenderTargetTag eTargetTag,
@@ -42,6 +43,7 @@ public:
 
 		
 	CRenderTarget*			Find_RenderTarget(RenderTargetTag eTargetTag);
+	void					Copy_RenderTarget(RenderTargetTag eDst, RenderTargetTag eSrc, LPD3DXEFFECT& pEffect);
 
 	void			SetUp_OnShader(LPD3DXEFFECT& pEffect, RenderTargetTag eTargetTag, const char* pConstantName);
 	void			SetUp_OnRenderTargetDesc(D3DSURFACE_DESC* pDesc, RenderTargetTag eTargetTag);

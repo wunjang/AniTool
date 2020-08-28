@@ -20,6 +20,7 @@ public:
 	ENGINE::CDynamicMesh* Get_Mesh(_uint iParts) { return m_pMeshCom[iParts]; }
 	// Setter
 	void				Set_Animation(ANITAG::PLAYER_BODY eAni);
+	void				Set_AnimationSpeed(const _float& fAniSpeed) { m_fAnimationSpeed = fAniSpeed; }
 	// General
 	HRESULT				Load_AnimationComboData(const wstring& wstrFileName);
 
@@ -27,7 +28,7 @@ public:
 	virtual HRESULT		Initialize(void);
 	virtual _int		Update(const _float& fTimeDelta);
 	virtual _int		LateUpdate(const _float& fTimeDelta);
-	virtual void		Render(const _float& fTimeDelta);
+	virtual void		Render(const _float& fTimeDelta, ENGINE::SUBSET::RENDER eRenderSel);
 
 private:
 	HRESULT				Add_Component();
@@ -40,7 +41,7 @@ private:
 
 	map<_uint, vector<_uint>>	m_mapAniSet;
 
-
+	_float					m_fAnimationSpeed = 1.8f;
 public:
 	static CSampleObject* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 

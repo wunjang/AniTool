@@ -16,10 +16,11 @@ public:
 	HRESULT		Ready_RenderTarget(const _uint& iWidth, 
 									const _uint& iHeight,
 									D3DFORMAT Format,
-									D3DXCOLOR Color);
+									D3DXCOLOR Color,
+									_bool bUseDepth);
 
 	void		SetUp_OnGraphicDev(const _uint& iIndex);
-	void		Clear_RenderTarget(void);
+	void		Clear_RenderTarget(_bool bCheckClearZBuffer = false);
 	void		Release_OnGraphicDev(const _uint& iIndex);
 
 	HRESULT		Ready_DebugBuffer(const _float& fX,
@@ -28,6 +29,7 @@ public:
 										const _float& fSizeY);
 	HRESULT		Ready_TargetBuffer(const _float& fWidth, const _float& fHeight);
 	void		RenderBuffer();
+
 
 	void			Render_DebugBuffer(void);
 	void			SetUp_OnShader(LPD3DXEFFECT& pEffect, const char* pConstantName);
@@ -48,13 +50,23 @@ private:
 	LPDIRECT3DSURFACE9			m_pOldTargetSurface;
 
 	D3DXCOLOR					m_ClearColor;
+	/////////////////////////////////////////////////
+	//Depth Buffer
+	_bool						m_bUseDepthBuffer;
+
+	LPDIRECT3DTEXTURE9			m_pDepthTexture;
+	LPDIRECT3DSURFACE9			m_pDepthSurface;
+
+	LPDIRECT3DSURFACE9			m_pOldDepthSurface;
+
 
 public:
 	static CRenderTarget*		Create(LPDIRECT3DDEVICE9 pGraphicDev, 
 										const _uint& iWidth, 
 										const _uint& iHeight,
 										D3DFORMAT Format,
-										D3DXCOLOR Color);
+										D3DXCOLOR Color,
+										_bool bUseDepth =false);
 
 	virtual void Free(void);
 

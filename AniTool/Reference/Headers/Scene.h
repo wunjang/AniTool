@@ -4,7 +4,7 @@
 #include "Layer.h"
 
 BEGIN(ENGINE)
-
+class CLayer;
 class ENGINE_DLL CScene : public CBase
 {
 protected:
@@ -32,12 +32,20 @@ public:
 		const  OBJ_ID eObjectID,
 		CGameObject* pObject);
 
+	CLayer* Get_Layer(LAYER_TYPE eType);
+
+	
+
 public:
 	virtual HRESULT		Ready_Scene(void);
+	virtual HRESULT		LateInitialize(void);
+	virtual HRESULT		Enter_Scene(void)PURE;
+
+
 	virtual _int		Update_Scene(const _float& fTimeDelta);
 	virtual _int		LateUpdate_Scene(const _float& fTimeDelta);
-	virtual void		Render_Scene(void)PURE;
-
+	virtual void		Render_Scene(const _float& fTimeDelta)PURE;
+	virtual	HRESULT		Ready_Light(void)PURE;
 protected:
 	LPDIRECT3DDEVICE9				m_pGraphicDev;
 

@@ -18,7 +18,7 @@ public:
 	HRESULT Initialize();
 
 	virtual _int		Update(const _float& fTimeDelta) override;
-	virtual void		Render(const _float& fTimeDelta) override;
+	virtual void		Render(const _float& fTimeDelta, ENGINE::SUBSET::RENDER eRenderSel) override;
 
 private:
 	const vector<CAMERAACTION>*	m_pvecAction = nullptr;
@@ -35,6 +35,7 @@ public:
 
 private:
 	virtual void Free(void);
+
 };
 
 

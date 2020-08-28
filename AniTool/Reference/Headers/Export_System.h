@@ -20,11 +20,11 @@ inline void			Render_End(void);
 
 // TimerMgr
 // Get
-inline _float		Get_TimeDelta(const _tchar* pTimerTag);
+inline _float		Get_TimeDelta(const TIMER::TYPE eTimerTag);
 // Set
-inline void			Set_TimeDelta(const _tchar* pTimerTag);
+inline void			Set_TimeDelta(const TIMER::TYPE eTimerTag);
 // General;
-inline HRESULT		Ready_Timer(const _tchar* pTimerTag);
+inline HRESULT		Ready_Timer(const TIMER::TYPE eTimerTag);
 
 // FrameMgr
 // Get
@@ -45,11 +45,9 @@ inline HRESULT	Ready_Font(LPDIRECT3DDEVICE9 pGraphicDev,
 	const _uint& iHeight,
 	const _uint& iWeight);
 
-inline void	Render_Font(const wstring pFontTag,
-	const wstring pString,
-	const _vec2* pPos,
-	D3DXCOLOR Color);
-
+inline void	Render_Font(const wstring pFontTag,const wstring pString,const _vec2* pPos,D3DXCOLOR Color, _matrix Scale, _matrix Rot, _matrix Trans, _bool NoRc = true, _matrix view = {}, _matrix proj = {});
+inline int	Render_Narration(const wstring pFontTag,const wstring narration, const _vec2* pPos, D3DXCOLOR Color, _matrix Scale, _matrix Rot, _matrix Trans, const _float& fTimeDelta);
+inline void Set_Count(const wstring pFontTag,_float count);
 // InputDev
 // Get
 inline _byte	Get_DIKeyState(_ubyte byKeyID);
@@ -59,6 +57,9 @@ inline _long	Get_DIMouseMove(MOUSEMOVESTATE eMouseState);
 inline _bool		KeyPressing(_ubyte byKeyID);
 inline _bool		KeyDown(_ubyte byKeyID);
 inline _bool		KeyUp(_ubyte byKeyID);
+
+inline _bool		KeyCombine(_ubyte dwFristKey, _ubyte dwSecondKey);
+
 
 inline _bool		MousePressing(MOUSEKEYSTATE eMouse);
 inline _bool		MouseDown(MOUSEKEYSTATE eMouse);

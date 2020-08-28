@@ -150,7 +150,7 @@ _int CEventCamera::Update(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CEventCamera::Render(const _float & fTimeDelta)
+void CEventCamera::Render(const _float & fTimeDelta, ENGINE::SUBSET::RENDER eRenderSel)
 {
 	_matrix matWorld;
 	D3DXMatrixIdentity(&matWorld);

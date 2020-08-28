@@ -33,6 +33,7 @@ private:
 	LPDIRECT3DDEVICE9		m_pGraphicDev = nullptr;
 	ID3DXLine*				m_pLine;
 
+	LPDIRECT3DSURFACE9		m_DepthStencil;
 public:
 	inline	virtual void Free(void);
 };

@@ -18,6 +18,8 @@ public:
 	void			Render_Light(LPD3DXEFFECT& pEffect);
 	const D3DLIGHT9*		Get_Light(void) { return &m_tLightInfo; }
 	_uint			GetIndex() { return m_iIndex; }
+
+	void			SetLightCam(LPD3DXEFFECT & pEffect);
 private:
 	LPDIRECT3DDEVICE9		m_pGraphicDev;
 	D3DLIGHT9				m_tLightInfo;
@@ -27,6 +29,7 @@ private:
 	LPDIRECT3DINDEXBUFFER9		m_pIB;
 
 	_matrix		m_matWorld;
+	_matrix		m_matProj;
 	_matrix*	m_pParent;
 
 	_bool		m_bDead;

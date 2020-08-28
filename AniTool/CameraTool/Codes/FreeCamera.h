@@ -23,6 +23,9 @@ public:
 
 	virtual _int Update(const _float& fTimeDelta) override;
 
+	// CCamera을(를) 통해 상속됨
+	virtual void Render(const _float & fTimeDelta, ENGINE::SUBSET::RENDER eRenderSel) override;
+
 private:
 	void		Key_Input(const _float& fTimeDelta);
 	void		Mouse_Move(const _float& fTimeDelta);

@@ -11,7 +11,7 @@ public:////기본함수
 	virtual HRESULT		Initialize(void);
 	virtual _int		Update(const _float& fTimeDelta) override;
 	virtual _int		LateUpdate(const _float& fTimeDelta) override;
-	virtual void		Render(const _float& fTimeDelta) override;
+	virtual void		Render(const _float& fTimeDelta, ENGINE::SUBSET::RENDER eRenderSel) override;
 	virtual HRESULT		Add_Component();
 	virtual HRESULT		SetUp_ConstantTable(LPD3DXEFFECT & pEffect);
 

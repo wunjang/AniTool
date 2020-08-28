@@ -18,17 +18,17 @@ void			Render_End(void)
 }
 // TimerMgr
 // Get
-_float		Get_TimeDelta(const _tchar* pTimerTag)
+_float		Get_TimeDelta(const TIMER::TYPE pTimerTag)
 {
 	return CTimerMgr::GetInstance()->Get_TimeDelta(pTimerTag);
 }
 // Set
-void		Set_TimeDelta(const _tchar* pTimerTag)
+void		Set_TimeDelta(const TIMER::TYPE pTimerTag)
 {
 	CTimerMgr::GetInstance()->Set_TimeDelta(pTimerTag);
 }
 // General;
-HRESULT	Ready_Timer(const _tchar* pTimerTag)
+HRESULT	Ready_Timer(const TIMER::TYPE pTimerTag)
 {
 	return CTimerMgr::GetInstance()->Ready_Timer(pTimerTag);
 }
@@ -67,13 +67,20 @@ HRESULT	Ready_Font(LPDIRECT3DDEVICE9 pGraphicDev,
 	return CFontMgr::GetInstance()->Ready_Font(pGraphicDev, pFontTag, pFontType, iWidth, iHeight, iWeight);
 }
 
-void	Render_Font(const wstring pFontTag,
-	const wstring pString,
-	const _vec2* pPos,
-	D3DXCOLOR Color)
+void	Render_Font(const wstring pFontTag,const wstring pString,const _vec2* pPos,D3DXCOLOR Color, _matrix Scale, _matrix Rot, _matrix Trans,_bool NoRc, _matrix view, _matrix proj)
 {
-	CFontMgr::GetInstance()->Render_Font(pFontTag, pString, pPos, Color);
+	CFontMgr::GetInstance()->Render_Font(pFontTag, pString, pPos, Color, Scale,Rot ,Trans,NoRc,view,proj);
 }
+int	Render_Narration(const wstring pFontTag, const wstring narration, const _vec2* pPos, D3DXCOLOR Color, _matrix Scale, _matrix Rot, _matrix Trans, const _float& fTimeDelta)
+{
+	return CFontMgr::GetInstance()->Render_Narration(pFontTag, narration, pPos, Color, Scale, Rot, Trans, fTimeDelta);
+}
+
+ void Set_Count(const wstring pFontTag, _float count)
+{
+	 CFontMgr::GetInstance()->Set_Count(pFontTag, count);
+}
+
 
 // InputDev
 // Get
@@ -103,6 +110,11 @@ inline _bool KeyDown(_ubyte byKeyID)
 inline _bool KeyUp(_ubyte byKeyID)
 {
 	return CInputDev::GetInstance()->KeyUp(byKeyID);
+}
+
+inline _bool KeyCombine(_ubyte dwFristKey, _ubyte dwSecondKey)
+{
+	return CInputDev::GetInstance()->KeyCombine(dwFristKey, dwSecondKey);
 }
 
 inline _bool MousePressing(MOUSEKEYSTATE eMouse)

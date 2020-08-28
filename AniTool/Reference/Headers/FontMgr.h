@@ -23,10 +23,9 @@ public:
 		const _uint& iHeight,
 		const _uint& iWeight);
 
-	void	Render_Font(const wstring pFontTag,
-		const wstring pString,
-		const _vec2* pPos,
-		D3DXCOLOR Color);
+	void	Render_Font(const wstring pFontTag,const wstring pString,const _vec2* pPos,D3DXCOLOR Color, _matrix Scale, _matrix Rot, _matrix Trans, _bool NoRc = true, _matrix view = {}, _matrix proj = {});
+	int		Render_Narration(const wstring pFontTag, const wstring narration, const _vec2* pPos, D3DXCOLOR Color, _matrix Scale, _matrix Rot, _matrix Trans, const _float& fTimeDelta);
+	void	Set_Count(const wstring pFontTag,_float count);
 
 private:
 	CFont*		Find_Font(const wstring pFontTag);

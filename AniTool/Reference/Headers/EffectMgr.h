@@ -15,16 +15,25 @@ protected:
 public:
 	void Update_Manager(const _float& fTimeDelta);
 	void LateUpdate_Manager(const _float& fTimeDelta);
+	void Reset_EffectManager();
 
 	HRESULT Ready_Manager(LPDIRECT3DDEVICE9 pGraphicDev);
-	void UseParticle(_vec3 vPos,PARTICLE_EFFECT_INFO tInfo, TEX_EFFECT_INFO tTexInfo,_float fUseTime,_bool bUseBloom, _int iMaxParticle,_matrix* pParent = nullptr);
+	CEffectParticle* UseParticle(CEffectParticle** ppParticle,_vec3 vPos, _vec3 vScale,_vec3 vAngle,PARTICLE_EFFECT_INFO tInfo, TEX_EFFECT_INFO tTexInfo,_float fUseTime,_bool bUseBloom, _int iMaxParticle,_matrix* pParent = nullptr, _bool bParentPosOnly = false);
+	CEffectParticle* UseMeshParticle(CEffectParticle** ppParticle, _vec3 vPos, _vec3 vScale, _vec3 vAngle, PARTICLE_EFFECT_INFO tInfo, TEX_EFFECT_INFO tTexInfo, _float fUseTime, LPD3DXMESH pMesh, _int iVertexInterval, _matrix* pParent = nullptr, _bool bParentPosOnly = false);
 
 	void Get_Current_ViewProj(_matrix* pView, _matrix* pProj)
-	{ *pView = m_matView; *pProj = m_matProj; }
+	{
+		if(pView)
+		*pView = m_matView; 
+		if(pProj)
+		*pProj = m_matProj; 
+	}
 
 	void Set_Current_ViewProj(_matrix matView, _matrix matProj) { m_matView = matView; m_matProj = matProj; }
 	// CBase을(를) 통해 상속됨
 	virtual void Free(void) override;
+
+	void Return_Particle(CEffectParticle** ppParticle);
 
 protected:
 	vector<CEffectParticle*> m_vecParticle;

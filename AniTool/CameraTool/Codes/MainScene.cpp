@@ -41,7 +41,7 @@ _int CMainScene::Update_Scene(const _float& fTimeDelta)
 	return 0;
 }
 
-void CMainScene::Render_Scene(void)
+void CMainScene::Render_Scene(const _float& fTimeDelta)
 {
 	// DEBUG 코드 출력 용도
 }
@@ -79,6 +79,17 @@ HRESULT CMainScene::Load_MapData(LPDIRECT3DDEVICE9 pGraphicDev, const ENGINE::LA
 	return S_OK;
 }
 
+void CMainScene::LoadTexture()
+{
+	map<CString, CString> mapTexFilePath;
+	CFunction::FindFileByExtention(L".png", L"..\\Resource\\Texture", &mapTexFilePath);
+
+	for (auto rTexPath : mapTexFilePath)
+	{
+		GET_INSTANCE(ENGINE::CComponent_Manager)->Add_Texture(m_pGraphicDev, ENGINE::SCENE_STATIC, rTexPath.first.GetString(), rTexPath.second.GetString());
+	}
+}
+
 CMainScene * CMainScene::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 	CMainScene *	pInstance = new CMainScene(pGraphicDev);
@@ -92,6 +103,16 @@ CMainScene * CMainScene::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 void CMainScene::Free(void)
 {
 	ENGINE::CScene::Free();
+}
+
+HRESULT CMainScene::Enter_Scene()
+{
+	return E_NOTIMPL;
+}
+
+HRESULT CMainScene::Ready_Light()
+{
+	return E_NOTIMPL;
 }
 
 
@@ -162,7 +183,8 @@ HRESULT CMainScene::Ready_Prototype(void)
 	ENGINE::Get_Renderer()->Set_GraphicDev(m_pGraphicDev);
 
 	FAILED_CHECK(ENGINE::Add_Prototype(0, L"TestTerrain", ENGINE::CVIBuffer_Terrain::Create(m_pGraphicDev, 1000, 1000, 10)));
-	GET_INSTANCE(ENGINE::CComponent_Manager)->Ready_AllTexture(m_pGraphicDev, L"../Data/ImagePath.txt");
+	//GET_INSTANCE(ENGINE::CComponent_Manager)->Ready_AllTexture(m_pGraphicDev, L"../Data/ImagePath.txt");
+	LoadTexture();
 	GET_INSTANCE(ENGINE::CComponent_Manager)->Ready_AllMesh(m_pGraphicDev, L"../Data/MeshImagePath.txt");
 
 	return S_OK;

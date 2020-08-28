@@ -6,34 +6,50 @@
 #include "AniCtrl.h"
 
 BEGIN(ENGINE)
-
+class CTexture;
 class ENGINE_DLL CDynamicMesh : public CMesh
 {
+
+
 private:
 	explicit CDynamicMesh(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CDynamicMesh(const CDynamicMesh& rhs);
 	virtual ~CDynamicMesh(void);
 
 public:
-	const D3DXFRAME_DERIVED*		Get_FrameByName(const char* pFrameName);
-	const D3DXFRAME*				Get_RootFrame();
-	CAniCtrl*						Get_AniCtrl() { return m_pAniCtrl; }
-	_bool							Is_AnimationSetFinish(_double dfAdjTime);
-	_bool							Is_AnimationSetFinishFromRatio(_double dfAdjTime);
+	const D3DXFRAME_DERIVED*				Get_FrameByName(const char* pFrameName);
+	D3DXFRAME*								Get_RootFrame();
+	CAniCtrl*								Get_AniCtrl() { return m_pAniCtrl; }
+	_bool									Is_AnimationSetFinish(_double dfAdjTime);
+	_bool									Is_AnimationSetFinishFromRatio(_double dfAdjTime);
 
 
 public:
-	HRESULT		Ready_Meshes(wstring wstrFilePath, wstring wstrFileName, _bool bIsPlayer = false);
-	void		Render_Meshes(void);
-	void		Render_Meshes(LPD3DXEFFECT& pEffect);
+	HRESULT									Ready_Meshes(wstring wstrFilePath, wstring wstrFileName, _bool bIsPlayer = false);
+	void									Render_Meshes(void);
 
-	void		Set_AnimationSet(const _uint& iIndex);
-	void		Play_AnimationSet(const _float& fTimeDelta);
+	void									Render_Meshes(LPD3DXEFFECT& pEffect, SUBSET::RENDER eRenderSel);
+	void									Render_Meshe_All(LPD3DXEFFECT& pEffect);
 
-	_bool		GetCheckHardwareSkinning() { return m_bCheckHardwareSkinning; }
+
+
+	void									Set_AnimationSet(const _uint& iIndex);
+	void									Set_CoreciveAnimationSet(const _uint& iIndex);
+
+	vector<D3DXMESHCONTAINER_DERIVED*>*		Get_MeshContainer() { return &m_vecMeshContainer; }
+	void									Set_MeshContainer(vector<D3DXMESHCONTAINER_DERIVED*>* pMeshContainer) { m_vecMeshContainer = *pMeshContainer; }
+	void									Set_RootFrame(D3DXFRAME* pRootFrame) { m_pRootFrame = pRootFrame; }
+
+
+	void									Play_AnimationSet(const _float& fTimeDelta);
+	_bool									GetCheckHardwareSkinning() { return m_bCheckHardwareSkinning; }
+	HRESULT									Set_CustomTexture(string strSubSetName, TEXTURE::SHADER eTexType, CTexture* pTexture, _uint iTexIndex = 0);
+
+
 private:
-	void		Update_FrameMatrices(D3DXFRAME_DERIVED* pFrame, const _matrix* pParentMatrix);
-	void		SetUp_FrameMatrixPointer(D3DXFRAME_DERIVED* pFrame);
+	void									Update_FrameMatrices(D3DXFRAME_DERIVED* pFrame, const _matrix* pParentMatrix);
+	void									SetUp_FrameMatrixPointer(D3DXFRAME_DERIVED* pFrame);
+
 private:
 	CHierarchyLoader*						m_pLoader;
 	CAniCtrl*								m_pAniCtrl;
@@ -41,6 +57,7 @@ private:
 	vector<D3DXMESHCONTAINER_DERIVED*>		m_vecMeshContainer;
 
 	_bool									m_bCheckHardwareSkinning;
+
 public:
 	static CDynamicMesh*		Create(LPDIRECT3DDEVICE9 pGraphicDev, wstring wstrFilePath, wstring wstrFileName);
 	virtual CComponent*			Clone(void * pArg);

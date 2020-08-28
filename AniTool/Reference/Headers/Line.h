@@ -21,7 +21,11 @@ public:
 	bool				Compare(const _vec2* pEndPos);
 
 	_vec2				Get_Nomal() { return m_vNormal; }
-private:
+	_vec2				Get_Direction() { return m_vDirection; }
+
+	_vec2				Get_LinePoint(POINT eType) { return m_vPoint[eType]; }
+	void				Set_LinePoint(POINT eType, _vec2 vPos) { m_vPoint[eType] = vPos; }
+public:
 	_vec2				m_vPoint[POINT_END];
 	_vec2				m_vDirection;
 	_vec2				m_vNormal;

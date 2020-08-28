@@ -18,14 +18,15 @@ public:
 		const _uint& iHeight,
 		const _uint& iWeight);
 
-	void		Render_Font(const wstring pString,
-		const _vec2* pPos,
-		D3DXCOLOR Color);
+	void		Render_Font(const wstring pString,const _vec2* pPos,D3DXCOLOR Color, _matrix Scale, _matrix Rot, _matrix Trans,_bool NoRc,_matrix view,_matrix proj);
+	int		Render_Narration(const wstring narration, const _vec2* pPos, D3DXCOLOR Color, _matrix Scale, _matrix Rot, _matrix Trans,const _float& fTimeDelta);
+	void		Set_Count(_float Count) { m_fCount = Count; }
 
 private:
 	LPDIRECT3DDEVICE9		m_pGraphicDev;
 	LPD3DXFONT				m_pFont;
 	LPD3DXSPRITE			m_pSprite;
+	_float					m_fCount;
 
 public:
 	static CFont*		Create(LPDIRECT3DDEVICE9 pGraphicDev,

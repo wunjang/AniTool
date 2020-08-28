@@ -42,11 +42,13 @@ public:
 	const vector<CAMERAACTION>* Get_Actions(void) { return &m_vecCameraAction; }
 	const CAMERAACTION*	Get_CurAction(void);
 	int					Get_CurActionIdx(void);
+	CDialogEx*			Get_SampleAniTool(void) { return m_pSampleTargetAnimationTool; }
 	void				Set_CurAction(_vec3 vPick);
 	void				Set_TargetPosData(_vec3 vPos);
 
 	void SerchFile(void);
 
+	virtual BOOL OnInitDialog();
 	afx_msg void OnLbnSelchangeCameraactionList();
 	afx_msg void OnBnClickedButtonSaveactionedit();
 	CStatic m_textTargetAction[TEXT_END];
@@ -60,7 +62,6 @@ public:
 	int m_iFollowOBJ_IDX;
 	float m_fDistance;
 	float m_fActionLength;
-	virtual BOOL OnInitDialog();
 	CListBox m_lboxCameraAction;
 	float m_fViewAngleTo;
 	CButton m_cbIsFollowTarget;
@@ -91,4 +92,7 @@ public:
 	float m_fSmoothLength[SMOOTH_END];
 	float m_fTargetScale;
 	afx_msg void OnBnClickedEscapestop();
+
+	CDialogEx* m_pSampleTargetAnimationTool = nullptr;
+	afx_msg void OnBnClickedTargetanimation();
 };

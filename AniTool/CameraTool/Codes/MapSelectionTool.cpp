@@ -71,8 +71,15 @@ void CMapSelectionTool::OnBnClickedLoadmapdata()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	if (m_lboxMap.GetCurSel() < 0 || m_lboxMap.GetCurSel() >= m_lboxMap.GetCount())
 		return;
+	_int cnt = ENGINE::Get_GameObjectCnt(ENGINE::LAYER_GAMEOBJECT, ENGINE::TERRAIN);
+	for (_int i = 0; i < cnt; ++i)
+	{
+		ENGINE::Get_GameObject(ENGINE::LAYER_GAMEOBJECT, ENGINE::TERRAIN, i)->Set_Dead();
+	}
 
 	CString strCurSel;
 	m_lboxMap.GetText(m_lboxMap.GetCurSel(), strCurSel);
 	FAILED_CHECK_RETURN(CMainScene::Load_MapData(GET_INSTANCE(ENGINE::CGraphicDev)->GetDevice(), ENGINE::LAYER_GAMEOBJECT, m_mapListMapData[strCurSel].GetString()));
+
+
 }

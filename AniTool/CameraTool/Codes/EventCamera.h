@@ -32,7 +32,7 @@ public:
 public:
 	HRESULT				Initialize();
 	virtual _int		Update(const _float& fTimeDelta) override;
-	virtual void		Render(const _float& fTimeDelta) override;
+	virtual void		Render(const _float& fTimeDelta, ENGINE::SUBSET::RENDER eRenderSel) override;
 
 private:
 	_bool ReadActionData(const _float& fTimeDelta);

@@ -86,6 +86,10 @@ void CFreeCamera::Free(void)
 	ENGINE::CCamera::Free();
 }
 
+void CFreeCamera::Render(const _float & fTimeDelta, ENGINE::SUBSET::RENDER eRenderSel)
+{
+}
+
 void CFreeCamera::Key_Input(const _float& fTimeDelta)
 {
 	if (ENGINE::KeyDown(DIK_F1))

@@ -16,10 +16,18 @@ protected:
 
 public:
 	//Getter
-	_matrix Get_matOrthoView() { return m_matOrthoView; }
-	_matrix Get_matView() { return m_matView; }
-	_matrix Get_matProjection() { return m_matProj; }
-	_matrix Get_matCameraWorld(_matrix* CameraWorld) { return *D3DXMatrixInverse(CameraWorld, NULL, &m_matView); }
+	const _matrix& Get_matOrthoView() { return m_matOrthoView; }
+	const _matrix& Get_matView() { return m_matView; }
+	const _matrix& Get_matProjection() { return m_matProj; }
+	const _matrix& Get_matCameraWorld(_matrix* CameraWorld)
+	{
+		D3DXMatrixInverse(&m_matCamWolrd, nullptr, &m_matView);
+		if (nullptr != CameraWorld)
+		{
+			*CameraWorld = m_matCamWolrd;
+		}
+		return m_matCamWolrd;
+	}
 	
 
 public:
@@ -30,7 +38,7 @@ public:
 protected:
 	_vec3			m_vEye, m_vAt, m_vUp;
 	_float			m_fFovY, m_fAspect, m_fNear, m_fFar;
-	_matrix			m_matView, m_matProj, m_matOrthoView, matCamWolrd;
+	_matrix			m_matView, m_matProj, m_matOrthoView, m_matCamWolrd;
 
 
 public:

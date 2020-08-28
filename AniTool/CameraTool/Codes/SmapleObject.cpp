@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "SmapleObject.h"
 
+#include "SampleTargetAnimationTool.h"
+
 CSampleObject::CSampleObject(LPDIRECT3DDEVICE9 pGraphicDev)
 	:ENGINE::CGameObject(pGraphicDev)
 {
@@ -69,6 +71,8 @@ HRESULT CSampleObject::Initialize(void)
 	for (int i = 0; i < PARTS_END; ++i)
 		m_pMeshCom[i]->Set_AnimationSet(ANITAG::Body_AreaWaitDance01);
 
+	//CSampleTargetAnimationTool::Get_Dialog()->Set_SampleObj(this);
+
 	return S_OK;
 }
 
@@ -78,11 +82,11 @@ _int CSampleObject::Update(const _float & fTimeDelta)
 	m_pRendererCom->Add_RenderGroup(ENGINE::RENDER_NONALPHA, this);
 
 	for (int i = 0; i < PARTS_END; ++i)
-		m_pMeshCom[i]->Play_AnimationSet(fTimeDelta);
+		m_pMeshCom[i]->Play_AnimationSet(m_fAnimationSpeed * fTimeDelta);
 	
 	_matrix matTwo, matFaceRot, matHandRot;
 
-	D3DXMatrixScaling(&matTwo, 2.f, 2.f, 2.f);
+	D3DXMatrixScaling(&matTwo, 2.4f, 2.4f, 2.4f);
 
 	D3DXMatrixRotationYawPitchRoll(&matFaceRot, D3DXToRadian(90.f), 0.f, D3DXToRadian(270.f));
 	D3DXMatrixRotationYawPitchRoll(&matHandRot, D3DXToRadian(90.f), 0.f, D3DXToRadian(90.f));
@@ -107,11 +111,14 @@ _int CSampleObject::LateUpdate(const _float & fTimeDelta)
 	return 0;
 }
 
-void CSampleObject::Render(const _float & fTimeDelta)
+void CSampleObject::Render(const _float& fTimeDelta, ENGINE::SUBSET::RENDER eRenderSel)
 {
 	ENGINE::CShader* pShader = ENGINE::Get_Shader(ENGINE::CShaderMgr::ShaderType_Mesh);
 
 	LPD3DXEFFECT pEffect = pShader->Get_EffectHandle();
+
+	m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, true);
+	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, true);
 
 	_matrix matView, matProj;
 	
@@ -119,7 +126,7 @@ void CSampleObject::Render(const _float & fTimeDelta)
 	matProj = GET_INSTANCE(CCameraMgr)->Get_Proj();
 
 	_uint iPassMax = 0;
-	//pEffect->SetTechnique("Hardware_Skin");
+	pEffect->SetTechnique("Default_Device");
 	pEffect->Begin(&iPassMax, 0);
 	pEffect->BeginPass(0);
 
@@ -129,7 +136,7 @@ void CSampleObject::Render(const _float & fTimeDelta)
 	for (int i = 0; i < PARTS_END; ++i)
 	{
 		pEffect->SetMatrix("g_matWorld", &m_matTransform[i]);
-		m_pMeshCom[i]->Render_Meshes(pEffect);
+		m_pMeshCom[i]->Render_Meshes(pEffect, eRenderSel);
 	}
 
 	pEffect->EndPass();

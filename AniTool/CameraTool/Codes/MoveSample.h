@@ -25,7 +25,7 @@ public:
 	virtual HRESULT		Initialize(void);
 	virtual _int		Update(const _float& fTimeDelta);
 	virtual _int		LateUpdate(const _float& fTimeDelta);
-	virtual void		Render(const _float& fTimeDelta);
+	virtual void		Render(const _float& fTimeDelta, ENGINE::SUBSET::RENDER eRenderSel);
 
 private:
 	HRESULT				Add_Component();

@@ -73,11 +73,11 @@ void CCamToolView::OnDraw(CDC* /*pDC*/)
 		return;
 
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
-	_float fDeltaTime = ENGINE::Get_TimeDelta(L"Timer_FPS");
+	_float fDeltaTime = ENGINE::Get_TimeDelta(ENGINE::TIMER::IMMEDIATE);
 	if (!ENGINE::IsPermit_Call(L"Frame", fDeltaTime))
 		return;
-	ENGINE::Set_TimeDelta(L"Timer_FPS");
 
+	ENGINE::Set_TimeDelta(ENGINE::TIMER::IMMEDIATE);
 	ENGINE::Set_InputDev();
 
 	Get_KeyInput();
@@ -94,7 +94,7 @@ void CCamToolView::OnDraw(CDC* /*pDC*/)
 	ENGINE::Get_Renderer()->Render_RenderTarget(m_pGraphicDev, fDeltaTime);
 
 
-	ENGINE::Render_FPS(L"Frame");
+	//ENGINE::Render_FPS(L"Frame");
 
 
 	ENGINE::Render_End();
@@ -182,8 +182,8 @@ void CCamToolView::OnInitialUpdate()
 	ENGINE::Ready_Frame(L"Frame", 144.f);
 
 	// Timer
-	ENGINE::Ready_Timer(L"Timer_FPS");
-	ENGINE::Set_TimeDelta(L"Timer_FPS");
+	ENGINE::Ready_Timer(ENGINE::TIMER::IMMEDIATE);
+	ENGINE::Set_TimeDelta(ENGINE::TIMER::IMMEDIATE);
 	// Manager
 	ENGINE::InItManager(m_pGraphicDev);
 	

@@ -20,6 +20,7 @@
 #include "LightMgr.h"
 //#include "Shader.h"
 #include "EffectMgr.h"
+#include "FogMgr.h"
 
 BEGIN(ENGINE)
 
@@ -30,6 +31,7 @@ inline CComponent*			Get_Component(ENGINE::LAYER_TYPE eType,
 	const COMPONENT::TAG eComponentTag,
 	COMPONENT::ID eID);
 
+inline CScene*				Get_Scene();
 
 inline CGameObject*			Get_GameObject(ENGINE::LAYER_TYPE eType,
 	const  OBJ_ID eObjectID,
@@ -43,26 +45,29 @@ inline HRESULT				SetUp_Scene(CScene* pScene);
 // General
 inline HRESULT				Create_Management(LPDIRECT3DDEVICE9 pGraphicDev, CManagement** ppManagement);
 inline HRESULT				Add_GameObject(LAYER_TYPE eLayerType, const  OBJ_ID eObjectID,CGameObject* pObject);
-inline HRESULT				LateAdd_GameObject(LAYER_TYPE eLayerType, const  OBJ_ID eObjectID, CGameObject* pObject);
 
-
+inline HRESULT				LateInitialize();
+inline HRESULT				Release_Scene();
 // Renderer
 // Get
 // Set
 // General
 inline CRenderer*			Get_Renderer(void);
 inline void					Set_DebugBuffer_Switch();
+inline void					ResetMeshConstant();
 //
 ////// LightMgr
 ////// Get
 inline const D3DLIGHT9*		Get_Light(const _uint& iIndex);
 // Set
 // General
-inline HRESULT		Ready_Light(LPDIRECT3DDEVICE9 pGraphicDev, const D3DLIGHT9* pLightInfo, const _uint& iIndex, _matrix* pParent = nullptr);
+inline HRESULT	Ready_Light(LPDIRECT3DDEVICE9 pGraphicDev, const D3DLIGHT9* pLightInfo, const _uint& iIndex, _matrix* pParent = nullptr);
 inline void		Render_Light(LPD3DXEFFECT& pEffect);
-HRESULT		Ready_PointLight(LPDIRECT3DDEVICE9 pGraphicDev, const D3DLIGHT9* pLightInfo, _matrix* pParent = nullptr);
-void		Update_Light(const _float& fTimeDelta);
-void		ResetLight();
+inline HRESULT	Ready_PointLight(LPDIRECT3DDEVICE9 pGraphicDev, const D3DLIGHT9* pLightInfo, _matrix* pParent = nullptr);
+inline void		Update_Light(const _float& fTimeDelta);
+inline void		ResetLight();
+inline void		Set_GodRay_Focus(_vec3 vPos);
+
 
 
 // ComponentMgr
@@ -88,7 +93,7 @@ inline HRESULT			Ready_LuminanceTarget(LPDIRECT3DDEVICE9 pGraphicDev);
 inline vector<CRenderTarget*> GetLuminanceTargetVector();
 
 inline HRESULT			Ready_MRT(MRTTag eMRTTag, RenderTargetTag eTargetTag);
-inline HRESULT			Clear_RenderTarget(RenderTargetTag eTargetTag);
+inline HRESULT			Clear_RenderTarget(RenderTargetTag eTargetTag,_bool bCheckClearZBuffer = true);
 inline HRESULT			Begin_MRT(MRTTag eMRTTag);
 inline HRESULT			End_MRT(MRTTag eMRTTag);
 inline HRESULT			Ready_DebugBuffer(RenderTargetTag eTargetTag,
@@ -106,6 +111,7 @@ inline void			SetUp_OnRenderTargetDesc(D3DSURFACE_DESC* pDesc, RenderTargetTag e
 
 inline CRenderTarget*			Find_RenderTarget(RenderTargetTag eTargetTag);
 
+inline void			Copy_RenderTarget(RenderTargetTag eDst, RenderTargetTag eSrc, LPD3DXEFFECT& pEffect);
 
 ///////////////////////////////////////////////////////////////////////////////////
 //ShaderMgr
@@ -120,12 +126,16 @@ inline void		Release_Utility(void);
 
 ///////////////////////////////////////////////////////////////////////////////////
 //EffectMgr
-inline 	void UseParticle(_vec3 vPos, PARTICLE_EFFECT_INFO tInfo, TEX_EFFECT_INFO tTexInfo, _float fUseTime, _bool bUseBloom, _int iMaxParticle, _matrix* pParent = nullptr);
+inline 	CEffectParticle* UseParticle(CEffectParticle** ppParticle,_vec3 vPos, _vec3 vScale, _vec3 vAngle, PARTICLE_EFFECT_INFO tInfo, TEX_EFFECT_INFO tTexInfo, _float fUseTime, _bool bUseBloom, _int iMaxParticle, _matrix* pParent = nullptr, _bool bParentPosOnly = false);
+inline 	CEffectParticle* UseMeshParticle(CEffectParticle** ppParticle, _vec3 vPos, _vec3 vScale, _vec3 vAngle, PARTICLE_EFFECT_INFO tInfo, TEX_EFFECT_INFO tTexInfo, _float fUseTime, LPD3DXMESH pMesh, _int iVertexInterval, _matrix* pParent = nullptr, _bool bParentPosOnly = false);
+
 inline 	void Set_Current_ViewProj(_matrix matView, _matrix matProj);
 inline 	void Get_Current_ViewProj(_matrix* pView, _matrix* pProj);
 inline void Update_Manager(const _float& fTimeDelta);
 inline void LateUpdate_Manager(const _float& fTimeDelta);
 inline HRESULT Ready_Manager(LPDIRECT3DDEVICE9 pGraphicDev);
+inline void Return_Particle(CEffectParticle* pParticle);
+inline void Reset_EffectManager();
 ///////////////////////////////////////////////////////////////////////////////////
 // Loader
 inline HRESULT		Ready_Loading(LPDIRECT3DDEVICE9 pGraphicDev);

@@ -12,8 +12,8 @@ public:
 
 	virtual _int		Update(const _float& fTimeDelta);
 	virtual _int		LateUpdate(const _float& fTimeDelta);
-	virtual void		Render(const _float& fTimeDelta);
-	virtual void		Render_PostProcess(const _float& fTimeDelta)override;
+	virtual void		Render(const _float& fTimeDelta, ENGINE::SUBSET::RENDER eRenderSel);
+	virtual void		Render_PostProcess(const _float& fTimeDelta, ENGINE::SUBSET::RENDER eRenderSel)override;
 	virtual HRESULT		Add_Component(const wstring wstrResourseName);
 	virtual HRESULT		SetUp_ConstantTable(LPD3DXEFFECT & pEffect);
 

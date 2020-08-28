@@ -2,13 +2,23 @@
  matrix				g_matView;
  matrix				g_matProj;
 
- matrix				g_matOldWorld;		// 상수테이블 : 실제 데이터를 대신하는 상수 문자열
- matrix				g_matOldView;
- matrix				g_matOldProj;
+ matrix				g_matLightWorld;
+ matrix				g_matLightView;
+ matrix				g_matLightProj;
+
+
+
+ static matrix		g_matOldView;
+ static matrix		g_matOldProj;
+
+ matrix		g_matProjInv;
+ matrix		g_matViewInv;
 
  float gamma = 2.2f;
  float g_fDistiortionPower = 1.f;
-texture2D				g_BaseTexture;
+
+ float4 g_vNormalKey = (0.5f, 0.5f, 0.5f, 0.f);
+texture2D	g_BaseTexture;
 
 sampler		BaseSampler = sampler_state
 {
@@ -17,9 +27,10 @@ sampler		BaseSampler = sampler_state
 	minfilter = linear;
 	magfilter = linear;
 	mipfilter = linear;
+
 };
 
-texture2D				g_AlbedoTexture;
+texture2D	g_AlbedoTexture;
 
 sampler		AlbedoSampler = sampler_state
 {
@@ -30,7 +41,7 @@ magfilter = linear;
 mipfilter = linear;
 };
 
-texture2D				g_MaskTexture;
+texture2D	g_MaskTexture;
 
 sampler		MaskSampler = sampler_state
 {
@@ -41,7 +52,7 @@ magfilter = linear;
 mipfilter = linear;
 };
 
-texture2D				g_DisolveTexture;
+texture2D	g_DisolveTexture;
 
 sampler		DisolveSampler = sampler_state
 {
@@ -52,7 +63,7 @@ magfilter = linear;
 mipfilter = linear;
 };
 
-texture2D				g_MotionBlurTexture;
+texture2D	g_MotionBlurTexture;
 
 sampler		MotionBlurSampler = sampler_state
 {
@@ -64,7 +75,7 @@ mipfilter = linear;
 };
 //A 는 스펙큘러 적용 범위로 하자
 
-texture				g_NormalTexture;
+texture		g_NormalTexture;
 sampler		NormalSampler = sampler_state
 {
 	texture = g_NormalTexture;
@@ -72,17 +83,15 @@ sampler		NormalSampler = sampler_state
 };
 /////////////////////////////////////////////////////
 //B : 알파
-texture2D				g_DepthTexture;
+texture2D	g_DepthTexture;
 sampler		DepthSampler = sampler_state
 {
 	texture = g_DepthTexture;
 
-minfilter = linear;
-magfilter = linear;
-mipfilter = linear;
+
 };
 ////////////////////////////////////////////////////
-texture				g_EmissiveTexture;
+texture		g_EmissiveTexture;
 sampler		EmissiveSampler = sampler_state
 {
 	texture = g_EmissiveTexture;
@@ -103,10 +112,42 @@ magfilter = linear;
 mipfilter = linear;
 };
 
-texture2D				g_DistortionTexture;
+texture				g_GradientTexture;
+
+sampler		GradientSampler = sampler_state
+{
+	texture = g_GradientTexture;
+
+minfilter = linear;
+magfilter = linear;
+mipfilter = linear;
+};
+
+texture2D	g_DistortionTexture;
 sampler		DistortionSampler = sampler_state
 {
 	texture = g_DistortionTexture;
+
+minfilter = linear;
+magfilter = linear;
+mipfilter = linear;
+};
+
+texture2D	g_SmokeTexture;
+sampler		SmokeSampler = sampler_state
+{
+	texture = g_SmokeTexture;
+
+minfilter = linear;
+magfilter = linear;
+mipfilter = linear;
+};
+
+texture2D	g_VelocityTexture;
+
+sampler		VelocitySampler = sampler_state
+{
+	texture = g_VelocityTexture;
 
 minfilter = linear;
 magfilter = linear;

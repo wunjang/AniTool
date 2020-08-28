@@ -15,9 +15,17 @@ private:
 public:
 	virtual HRESULT Ready_Scene(void) override;
 	virtual _int Update_Scene(const _float& fTimeDelta) override;
-	virtual void Render_Scene(void) override;
+	virtual void Render_Scene(const _float& fTimeDelta) override;
 	
 	static HRESULT		Load_MapData(LPDIRECT3DDEVICE9 pGraphicDev, const ENGINE::LAYER_TYPE eLayerType, wstring wstrFilePath);
+
+
+	void	LoadTexture();
+
+	// CScene을(를) 통해 상속됨
+	virtual HRESULT Enter_Scene();
+
+	virtual HRESULT Ready_Light();
 
 private:
 	HRESULT		Ready_Prototype(void);
@@ -37,6 +45,8 @@ public:
 
 private:
 	virtual void Free(void) override;
+
+
 
 };
 

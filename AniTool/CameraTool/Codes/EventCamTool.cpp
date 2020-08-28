@@ -10,6 +10,8 @@
 #include "FreeCamera.h"
 #include "SmapleObject.h"
 
+#include "SampleTargetAnimationTool.h"
+
 
 // CEventCamTool 대화 상자입니다.
 
@@ -100,6 +102,7 @@ BEGIN_MESSAGE_MAP(CEventCamTool, CDialogEx)
 	ON_BN_CLICKED(IDC_CAMERACATION_COPY, &CEventCamTool::OnBnClickedCameracationCopy)
 	ON_BN_CLICKED(IDC_CLEARSMOOTH, &CEventCamTool::OnBnClickedClearsmooth)
 	ON_BN_CLICKED(IDC_ESCAPESTOP, &CEventCamTool::OnBnClickedEscapestop)
+	ON_BN_CLICKED(IDC_TARGETANIMATION, &CEventCamTool::OnBnClickedTargetanimation)
 END_MESSAGE_MAP()
 
 
@@ -273,6 +276,10 @@ BOOL CEventCamTool::OnInitDialog()
 	m_cboxEffect.SetCurSel(0);
 
 	SerchFile();
+
+	m_pSampleTargetAnimationTool = new CSampleTargetAnimationTool;
+	m_pSampleTargetAnimationTool->Create(IDD_SAMPLETARGETANIMATIONTOOL, this);
+	m_pSampleTargetAnimationTool->ShowWindow(SW_HIDE);
 
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -467,6 +474,7 @@ void CEventCamTool::OnBnClickedFreecamCopy()
 void CEventCamTool::OnBnClickedTargetDataApply()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
 	_vec3 vPos, vAngle;
 	memcpy(&vPos, m_fTargetPos, sizeof(_vec3));
 	memcpy(&vAngle, m_fTargetAngle, sizeof(_vec3));
@@ -545,4 +553,11 @@ void CEventCamTool::OnBnClickedEscapestop()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 
 	GET_INSTANCE(CCameraMgr)->EscapeStop();
+}
+
+
+void CEventCamTool::OnBnClickedTargetanimation()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	m_pSampleTargetAnimationTool->ShowWindow(SW_SHOW);
 }

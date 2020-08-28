@@ -47,7 +47,7 @@ _int CHeightField::LateUpdate(const _float& fTimeDelta)
 	return ENGINE::NO_EVENT;
 }
 
-void CHeightField::Render(const _float& fTimeDelta)
+void CHeightField::Render(const _float& fTimeDelta, ENGINE::SUBSET::RENDER eRenderSel)
 {
 	m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
