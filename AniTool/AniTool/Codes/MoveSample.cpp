@@ -61,7 +61,7 @@ _int CMoveSample::LateUpdate(const _float & fTimeDelta)
 	return 0;
 }
 
-void CMoveSample::Render(const _float & fTimeDelta)
+void CMoveSample::Render(const _float & fTimeDelta, ENGINE::SUBSET::RENDER eRenderSel)
 {
 	ENGINE::CShader* pShader = ENGINE::Get_Shader(ENGINE::CShaderMgr::ShaderType_Mesh);
 
@@ -83,7 +83,7 @@ void CMoveSample::Render(const _float & fTimeDelta)
 	for (int i = 0; i < PARTS_END; ++i)
 	{
 		pEffect->SetMatrix("g_matWorld", &m_matTransform[i]);
-		m_pMeshCom[i]->Render_Meshes(pEffect);
+		m_pMeshCom[i]->Render_Meshes(pEffect, eRenderSel);
 	}
 
 	pEffect->EndPass();

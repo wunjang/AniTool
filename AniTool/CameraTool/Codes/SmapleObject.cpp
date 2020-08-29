@@ -64,7 +64,7 @@ HRESULT CSampleObject::Initialize(void)
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_AnimationComboData(L"PlayerAnimationSet"), E_FAIL);
 
-	m_pTransformCom->Set_Scale(0.003f, 0.003f, 0.003f);
+	m_pTransformCom->Set_Scale(0.007f, 0.007f, 0.007f);
 
 
 

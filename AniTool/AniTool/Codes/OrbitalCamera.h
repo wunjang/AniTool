@@ -16,6 +16,7 @@ public:
 	HRESULT Initialize(const _float& fFovY);
 
 	virtual _int Update(const _float& fTimeDelta) override;
+	virtual void Render(const _float & fTimeDelta, ENGINE::SUBSET::RENDER eRenderSel) override;
 
 private:
 	void		Key_Input(const _float& fTimeDelta);

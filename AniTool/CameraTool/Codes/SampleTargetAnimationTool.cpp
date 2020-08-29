@@ -81,7 +81,7 @@ void CSampleTargetAnimationTool::OnLbnSelchangeSampletargetanimationlist()
 	if (m_lboxSampleTargetAnimation.GetCurSel() < 0 && m_lboxSampleTargetAnimation.GetCurSel() >= m_lboxSampleTargetAnimation.GetCount())
 		return;
 
-	m_pSampleObj->Get_Mesh(CSampleObject::PARTS_BODY)->Set_AnimationSet(m_lboxSampleTargetAnimation.GetCurSel());
+	m_pSampleObj->Set_Animation(ANITAG::PLAYER_BODY(m_lboxSampleTargetAnimation.GetCurSel()));
 }
 
 

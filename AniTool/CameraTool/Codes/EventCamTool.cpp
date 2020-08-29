@@ -23,7 +23,7 @@ CEventCamTool::CEventCamTool(CWnd* pParent /*=NULL*/)
 	, m_fDistance(0)
 	, m_fActionLength(0)
 	, m_fViewAngleTo(0)
-	, m_fTargetScale(0.003f)
+	, m_fTargetScale(0.007f)
 {
 	ZeroMemory(m_vMoveTo, sizeof(float) * 3);
 	ZeroMemory(m_vRotateTo, sizeof(float) * 3);

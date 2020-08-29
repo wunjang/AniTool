@@ -70,12 +70,13 @@ _int CSampleObject::LateUpdate(const _float & fTimeDelta)
 	return 0;
 }
 
-void CSampleObject::Render(const _float & fTimeDelta)
+void CSampleObject::Render(const _float & fTimeDelta, ENGINE::SUBSET::RENDER eRenderSel)
 {
 	ENGINE::CShader* pShader = ENGINE::Get_Shader(ENGINE::CShaderMgr::ShaderType_Mesh);
 
 	LPD3DXEFFECT pEffect = pShader->Get_EffectHandle();
-
+	m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, true);
+	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, true);
 	_matrix matView, matProj;
 	COrbitalCamera* pCam = dynamic_cast<COrbitalCamera*>(ENGINE::Get_GameObject(ENGINE::LAYER_ENVIRONMENT, ENGINE::CAMERA));
 	matView = pCam->Get_matView();
@@ -83,6 +84,7 @@ void CSampleObject::Render(const _float & fTimeDelta)
 
 	_uint iPassMax = 0;
 	//pEffect->SetTechnique("Hardware_Skin");
+	pEffect->SetTechnique("Default_Device");
 	pEffect->Begin(&iPassMax, 0);
 	pEffect->BeginPass(0);
 
@@ -92,7 +94,7 @@ void CSampleObject::Render(const _float & fTimeDelta)
 	for (int i = 0; i < PARTS_END; ++i)
 	{
 		pEffect->SetMatrix("g_matWorld", &m_matTransform[i]);
-		m_pMeshCom[i]->Render_Meshes(pEffect);
+		m_pMeshCom[i]->Render_Meshes(pEffect, eRenderSel);
 	}
 
 	pEffect->EndPass();

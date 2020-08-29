@@ -65,6 +65,10 @@ _int COrbitalCamera::Update(const _float& fTimeDelta)
 	return iExit;
 }
 
+void COrbitalCamera::Render(const _float & fTimeDelta, ENGINE::SUBSET::RENDER eRenderSel)
+{
+}
+
 
 COrbitalCamera* COrbitalCamera::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fFovY)
 {
