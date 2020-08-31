@@ -159,7 +159,7 @@ void CCamToolView::OnInitialUpdate()
 	GetWindowRect(&rt);
 
 	// GraphicDev
-	ENGINE::Ready_GraphicDev(g_MFChWnd, ENGINE::MODE_WIN, rt.Width(), rt.Height(), &m_pDeviceClass);
+	ENGINE::Ready_GraphicDev(g_MFChWnd, ENGINE::MODE_WIN, VIEWCX, VIEWCY, &m_pDeviceClass);
 	m_pGraphicDev = m_pDeviceClass->GetDevice();
 	m_pGraphicDev->AddRef();
 

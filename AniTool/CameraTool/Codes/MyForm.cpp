@@ -95,6 +95,5 @@ void CMyForm::OnTcnSelchangeTab(NMHDR *pNMHDR, LRESULT *pResult)
 		m_pTab[i]->ShowWindow(SW_HIDE);
 	m_pTab[m_tabTools.GetCurSel()]->ShowWindow(SW_SHOW);
 
-
 	*pResult = 0;
 }

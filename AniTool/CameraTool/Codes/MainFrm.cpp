@@ -56,6 +56,9 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 	// TODO: CREATESTRUCT cs를 수정하여 여기에서
 	//  Window 클래스 또는 스타일을 수정합니다.
 
+	cs.cx = VIEWCX + FORMCX;
+	cs.cy = VIEWCY;
+
 	return TRUE;
 }
 
@@ -86,8 +89,8 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 	m_MainSplitWnd.CreateView(0, 1, RUNTIME_CLASS(CCamToolView), CSize(VIEWCX, VIEWCY), pContext);
 	m_MainSplitWnd.CreateView(0, 0, RUNTIME_CLASS(CMyForm), CSize(FORMCX, FORMCY), pContext);
 
-	//열의 크기를 재조정해주는 함수 SetColumnInfo(몇뻔째 열인지, 크기, 최소 크기. )
-	m_MainSplitWnd.SetColumnInfo(0, FORMCX, FORMCX);
+	//열의 크기를 재조정해주는 함수 SetColumnInfo(몇번째 열인지, 크기, 최소 크기. )
+	m_MainSplitWnd.SetColumnInfo(0, FORMCX, 200);
 
 	return TRUE;
 }

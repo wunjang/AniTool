@@ -72,7 +72,6 @@
 #define IDC_ESCAPESTOP                  1087
 #define IDC_SAMPLETARGETANIMATIONLIST   1088
 #define IDC_TARGETANIMATION             1089
-#define IDC_EDIT1                       1090
 #define IDC_ANISPEED                    1090
 
 // Next default values for new objects
